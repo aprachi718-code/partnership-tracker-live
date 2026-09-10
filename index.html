@@ -349,16 +349,34 @@
       border-radius: 10px;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      touch-action: pan-x pan-y;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
       position: relative;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .table-container::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 3px;
     }
 
     table.tabular-tracker {
       width: 100%;
-      min-width: 980px;
+      min-width: 1000px;
       border-collapse: collapse;
       text-align: left;
       font-size: 0.86rem;
+      touch-action: pan-x pan-y;
     }
 
     thead th {
