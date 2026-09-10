@@ -399,7 +399,7 @@
     tbody tr:last-child { border-bottom: none; }
 
     td {
-      padding: 0.85rem 1rem;
+      padding: 0.65rem 0.85rem;
       vertical-align: top;
       color: var(--text-main);
     }
@@ -421,21 +421,17 @@
     .col-update {
       min-width: 260px;
       width: 28%;
-      line-height: 1.5;
+      line-height: 1.45;
       color: #1e293b;
-      white-space: pre-wrap;
-      word-break: break-word;
     }
 
     .col-next {
       min-width: 260px;
       width: 28%;
-      line-height: 1.5;
+      line-height: 1.45;
       color: var(--color-next-steps);
       font-weight: 500;
       background: rgba(240, 249, 255, 0.4);
-      white-space: pre-wrap;
-      word-break: break-word;
     }
 
     .col-move {
@@ -453,13 +449,14 @@
     .editable-cell {
       outline: none;
       border-radius: 4px;
-      padding: 3px 5px;
-      margin: -3px -5px;
+      padding: 2px 4px;
+      margin: 0;
       cursor: text;
       transition: background-color 0.15s ease, box-shadow 0.15s ease;
-      min-height: 1.3em;
+      min-height: 1.2em;
       white-space: pre-wrap;
       word-break: break-word;
+      line-height: 1.45;
     }
 
     .editable-cell:hover {
@@ -1584,12 +1581,8 @@
           <td class="col-status">
             <span class="status-badge ${badgeClass} editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'status')" onblur="handleCellBlur(this, '${it.id}', 'status')" title="Click to edit status">${highlight(it.status || 'Active', q)}</span>
           </td>
-          <td class="col-update">
-            <div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'update')" onblur="handleCellBlur(this, '${it.id}', 'update')" title="Click to edit">${highlight(it.update, q)}</div>
-          </td>
-          <td class="col-next">
-            <div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'next')" onblur="handleCellBlur(this, '${it.id}', 'next')" title="Click to edit">${highlight(it.next, q)}</div>
-          </td>
+          <td class="col-update"><div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'update')" onblur="handleCellBlur(this, '${it.id}', 'update')" title="Click to edit">${highlight(it.update, q)}</div></td>
+          <td class="col-next"><div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'next')" onblur="handleCellBlur(this, '${it.id}', 'next')" title="Click to edit">${highlight(it.next, q)}</div></td>
           <td class="col-move">
             <select class="stage-select" onchange="moveStage('${it.id}', this.value)">
               <option value="ongoing" ${it.stage === 'ongoing' ? 'selected' : ''}>Ongoing</option>
