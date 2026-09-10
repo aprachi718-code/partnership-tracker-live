@@ -1370,18 +1370,23 @@
         }
       }
 
-      // Initialize default week if empty
-      if (!weeksData["10-Sep-2026"] || !weeksData["10-Sep-2026"].items) {
-        weeksData["10-Sep-2026"] = {
-          label: "Week of: 10 September 2026 (Current)",
-          items: JSON.parse(JSON.stringify(DEFAULT_DATA))
-        };
-        localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(weeksData));
+      // Remove any unwanted test weeks
+      if (weeksData["17-September-2026"]) {
+        delete weeksData["17-September-2026"];
       }
 
-      // Find active week
-      const keys = Object.keys(weeksData);
-      currentWeekKey = keys[keys.length - 1];
+      // Initialize default week
+      if (!weeksData["10-Sep-2026"] || !weeksData["10-Sep-2026"].items) {
+        weeksData["10-Sep-2026"] = {
+          label: "Week of: 10 September 2026",
+          items: JSON.parse(JSON.stringify(DEFAULT_DATA))
+        };
+      } else {
+        weeksData["10-Sep-2026"].label = "Week of: 10 September 2026";
+      }
+      localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(weeksData));
+
+      currentWeekKey = "10-Sep-2026";
       populateWeekSelector();
     }
 
