@@ -276,6 +276,95 @@
       background: #f8fafc;
     }
 
+    .btn-filter-toggle {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-filter-toggle:hover {
+      border-color: #10b981;
+      color: #047857;
+      background: #ecfdf5;
+    }
+
+    .btn-filter-toggle.active {
+      background: #ecfdf5;
+      border-color: #10b981;
+      color: #047857;
+      box-shadow: 0 0 0 1px #10b981;
+    }
+
+    .badge-updated {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+      margin-top: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .badge-updated:hover {
+      background: #d1fae5;
+      border-color: #6ee7b7;
+    }
+
+    .btn-mark-update {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      background: none;
+      border: 1px dashed #cbd5e1;
+      padding: 1px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 4px;
+      display: inline-block;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .btn-mark-update:hover {
+      color: #047857;
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .section-divider-row td {
+      padding: 0.5rem 1rem !important;
+      background: #f8fafc;
+      border-top: 1.5px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .section-divider-inner {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     /* 3 Tabs */
     .tabs-nav {
       display: flex;
@@ -869,6 +958,9 @@
         <select class="week-select" id="weekSelector" onchange="switchWeek(this.value)">
           <!-- Populated dynamically (e.g. 10 Sep 2026, 17 Sep 2026) -->
         </select>
+        <button class="btn-filter-toggle" id="btnFilterUpdated" onclick="toggleOnlyUpdatedFilter()" title="Filter to see only partnerships that have updates this week">
+          <i class="fa-solid fa-bolt" style="color: #10b981;"></i> Only Updated (<span id="count-updated-total">0</span>)
+        </button>
       </div>
       <button class="btn-new-week" id="btnCreateNewWeek">
         <i class="fa-solid fa-calendar-plus"></i> + Start Next Week's Update
@@ -1038,7 +1130,8 @@
         status: "Active",
         update: "Launching JEE.Adv AI and NEET.AI books. Shared 2,500 coupon codes with Pearson. Started book circulation in the market and e-commerce will be LIVE by 15 Sep.",
         next: "Talking to the Pearson team as to what all can be done to promote this organically.\nLanding pages for both books are in progress.",
-        comments: []
+        comments: [],
+        updatedThisWeek: true
       },
       {
         id: "p2",
@@ -1426,6 +1519,27 @@
       showToast(`Switched to ${weeksData[weekKey].label}`);
     };
 
+    let filterOnlyUpdated = false;
+
+    window.toggleOnlyUpdatedFilter = function() {
+      filterOnlyUpdated = !filterOnlyUpdated;
+      const btn = document.getElementById("btnFilterUpdated");
+      if (btn) btn.classList.toggle("active", filterOnlyUpdated);
+      renderTable();
+      showToast(filterOnlyUpdated ? "Showing only updated partnerships" : "Showing all partnerships");
+    };
+
+    window.toggleUpdated = function(id, event) {
+      if (event) event.stopPropagation();
+      const items = getActiveItems();
+      const item = items.find(x => x.id === id);
+      if (!item) return;
+      item.updatedThisWeek = !item.updatedThisWeek;
+      saveWeeks();
+      renderTable();
+      showToast(item.updatedThisWeek ? `Highlighted ${item.partner} as updated` : `Marked ${item.partner} as unchanged`);
+    };
+
     // Create New Week (Carry over items so user can edit for the new week)
     document.getElementById("btnCreateNewWeek").addEventListener("click", () => {
       const today = new Date();
@@ -1442,6 +1556,11 @@
       // Clone current week's items so nothing is lost
       const currentItems = weeksData[currentWeekKey] ? weeksData[currentWeekKey].items : DEFAULT_DATA;
       const clonedItems = JSON.parse(JSON.stringify(currentItems));
+
+      // In the new week, reset updatedThisWeek to false so only new edits are highlighted
+      clonedItems.forEach(it => {
+        it.updatedThisWeek = false;
+      });
 
       weeksData[newKey] = {
         label: `Week of: ${userDate}`,
@@ -1472,13 +1591,17 @@
 
     function updateCounts() {
       const counts = { ongoing: 0, pitches: 0, "not-moving": 0 };
+      let updatedTotal = 0;
       const items = getActiveItems();
       items.forEach(it => {
         if (counts[it.stage] !== undefined) counts[it.stage]++;
+        if (it.updatedThisWeek) updatedTotal++;
       });
       document.getElementById("count-ongoing").textContent = counts.ongoing;
       document.getElementById("count-pitches").textContent = counts.pitches;
       document.getElementById("count-not-moving").textContent = counts["not-moving"];
+      const updatedTotalEl = document.getElementById("count-updated-total");
+      if (updatedTotalEl) updatedTotalEl.textContent = updatedTotal;
     }
 
     function highlight(text, q) {
@@ -1512,11 +1635,12 @@
       const newText = el.innerText.trim();
       if (item[field] !== newText) {
         item[field] = newText;
-        saveWeeks();
-        showToast("Changes saved");
-        if (field === 'status') {
-          renderTable();
+        if (field === 'update' || field === 'next' || field === 'status') {
+          item.updatedThisWeek = true;
         }
+        saveWeeks();
+        showToast("Changes saved & marked as updated");
+        renderTable();
       }
     };
 
@@ -1529,7 +1653,7 @@
       const q = searchQuery.trim().toLowerCase();
       let matchCount = 0;
 
-      const filtered = items.filter(it => {
+      let filtered = items.filter(it => {
         const matchesQuery = !q ||
           it.partner.toLowerCase().includes(q) ||
           (it.status && it.status.toLowerCase().includes(q)) ||
@@ -1552,17 +1676,51 @@
         searchNotice.style.display = "none";
       }
 
+      if (filterOnlyUpdated) {
+        filtered = filtered.filter(it => it.updatedThisWeek);
+      }
+
+      // Sort: Updated items on top, unchanged items below
+      filtered.sort((a, b) => {
+        const aUp = a.updatedThisWeek ? 1 : 0;
+        const bUp = b.updatedThisWeek ? 1 : 0;
+        return bUp - aUp;
+      });
+
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr class="empty-row">
-            <td colspan="6">No partnerships found in this tab.</td>
+            <td colspan="6">${filterOnlyUpdated ? 'No partnerships marked as updated this week in this tab.' : 'No partnerships found in this tab.'}</td>
           </tr>
         `;
         return;
       }
 
+      let dividerInserted = false;
+      const hasUpdated = filtered.some(x => x.updatedThisWeek);
+      const hasUnchanged = filtered.some(x => !x.updatedThisWeek);
+
       filtered.forEach(it => {
+        // Section divider between updated and unchanged deals
+        if (!filterOnlyUpdated && !q && hasUpdated && hasUnchanged && !it.updatedThisWeek && !dividerInserted) {
+          dividerInserted = true;
+          const divTr = document.createElement("tr");
+          divTr.className = "section-divider-row";
+          const unchangedCount = filtered.filter(x => !x.updatedThisWeek).length;
+          divTr.innerHTML = `
+            <td colspan="6">
+              <div class="section-divider-inner">
+                <i class="fa-solid fa-clock-rotate-left"></i> Unchanged This Week (${unchangedCount})
+              </div>
+            </td>
+          `;
+          tbody.appendChild(divTr);
+        }
+
         const tr = document.createElement("tr");
+        if (it.updatedThisWeek) {
+          tr.style.backgroundColor = "#fafefc";
+        }
 
         let commentsHtml = "";
         if (it.comments && it.comments.length > 0) {
@@ -1581,6 +1739,10 @@
         tr.innerHTML = `
           <td class="col-partner">
             <div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'partner')" onblur="handleCellBlur(this, '${it.id}', 'partner')" title="Click to edit">${highlight(it.partner, q)}</div>
+            ${it.updatedThisWeek 
+              ? `<div class="badge-updated" onclick="toggleUpdated('${it.id}', event)" title="Click to remove update badge"><i class="fa-solid fa-bolt"></i> UPDATED</div>` 
+              : `<button class="btn-mark-update" onclick="toggleUpdated('${it.id}', event)" title="Click to highlight as updated this week">+ Mark Updated</button>`
+            }
             ${q && it.stage !== currentTab ? `<div style="font-size: 0.68rem; color: #64748b; font-weight: normal; margin-top: 3px;">[${getTabName(it.stage)}]</div>` : ''}
           </td>
           <td class="col-status">
