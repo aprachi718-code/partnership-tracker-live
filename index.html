@@ -1339,8 +1339,70 @@
 
     let weeksData = {};
     let currentWeekKey = "10-Sep-2026";
+    let userManuallySelectedWeek = false;
+    let lastKnownLatestWeek = null;
     let currentTab = "ongoing";
     let searchQuery = "";
+
+    function parseWeekDate(key, weekObj) {
+      if (weekObj && weekObj.createdAt) {
+        const t = new Date(weekObj.createdAt).getTime();
+        if (!isNaN(t)) return t;
+      }
+      const tryParse = (str) => {
+        if (!str) return 0;
+        const clean = str
+          .replace(/^Week of:\s*/i, "")
+          .replace(/(\d+)(st|nd|rd|th)/gi, "$1")
+          .replace(/[-_]/g, " ")
+          .trim();
+        let t = Date.parse(clean);
+        if (!isNaN(t)) return t;
+
+        const months = {
+          jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+          jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+        };
+        const mMatch = clean.match(/(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})/);
+        if (mMatch) {
+          const d = parseInt(mMatch[1], 10);
+          const mStr = mMatch[2].toLowerCase().substring(0, 3);
+          const y = parseInt(mMatch[3], 10);
+          if (months[mStr] !== undefined) {
+            return new Date(y, months[mStr], d).getTime();
+          }
+        }
+        return 0;
+      };
+
+      if (weekObj && weekObj.label) {
+        const t = tryParse(weekObj.label);
+        if (t > 0) return t;
+      }
+      if (key) {
+        const t = tryParse(key);
+        if (t > 0) return t;
+      }
+      return 0;
+    }
+
+    function getSortedWeekKeys(weeksObj) {
+      if (!weeksObj) return [];
+      const keys = Object.keys(weeksObj);
+      return keys.sort((a, b) => {
+        const timeA = parseWeekDate(a, weeksObj[a]);
+        const timeB = parseWeekDate(b, weeksObj[b]);
+        if (timeA !== timeB) {
+          return timeB - timeA; // Newest calendar date first
+        }
+        return b.localeCompare(a);
+      });
+    }
+
+    function getLatestWeekKey(weeksObj) {
+      const sorted = getSortedWeekKeys(weeksObj);
+      return sorted.length > 0 ? sorted[0] : "10-Sep-2026";
+    }
 
     let firebaseDb = null;
     let cloudRef = null;
@@ -1426,7 +1488,22 @@
             const isEditing = activeEl && (activeEl.isContentEditable || activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.tagName === "SELECT");
 
             weeksData = val.weeks;
+            if (weeksData["17-September-2026"]) {
+              delete weeksData["17-September-2026"];
+            }
             localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(weeksData));
+
+            // Default to latest week:
+            // 1. On fresh page open / reload
+            // 2. Whenever next week's update is added (latestKey changes)
+            // 3. Unless the user actively switched to an older week during this current session
+            const latestKey = getLatestWeekKey(weeksData);
+            if (!lastKnownLatestWeek || latestKey !== lastKnownLatestWeek || !userManuallySelectedWeek || !weeksData[currentWeekKey]) {
+              currentWeekKey = latestKey;
+              lastKnownLatestWeek = latestKey;
+              userManuallySelectedWeek = false;
+            }
+
             updateCounts();
 
             if (!isEditing) {
@@ -1472,6 +1549,7 @@
       if (!weeksData["10-Sep-2026"] || !weeksData["10-Sep-2026"].items) {
         weeksData["10-Sep-2026"] = {
           label: "Week of: 10 September 2026",
+          createdAt: "2026-09-10T00:00:00.000Z",
           items: JSON.parse(JSON.stringify(DEFAULT_DATA))
         };
       } else {
@@ -1479,7 +1557,9 @@
       }
       localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(weeksData));
 
-      currentWeekKey = "10-Sep-2026";
+      currentWeekKey = getLatestWeekKey(weeksData);
+      lastKnownLatestWeek = currentWeekKey;
+      userManuallySelectedWeek = false;
       populateWeekSelector();
     }
 
@@ -1502,21 +1582,25 @@
 
     function populateWeekSelector() {
       const select = document.getElementById("weekSelector");
+      if (!select) return;
       select.innerHTML = "";
-      Object.keys(weeksData).reverse().forEach(key => {
+      const sortedKeys = getSortedWeekKeys(weeksData);
+      sortedKeys.forEach(key => {
         const opt = document.createElement("option");
         opt.value = key;
         opt.textContent = weeksData[key].label;
         if (key === currentWeekKey) opt.selected = true;
         select.appendChild(opt);
       });
+      select.value = currentWeekKey;
     }
 
     window.switchWeek = function(weekKey) {
+      userManuallySelectedWeek = true;
       currentWeekKey = weekKey;
       updateCounts();
       renderTable();
-      showToast(`Switched to ${weeksData[weekKey].label}`);
+      showToast(`Switched to ${weeksData[weekKey] ? weeksData[weekKey].label : weekKey}`);
     };
 
     let filterOnlyUpdated = false;
@@ -1564,10 +1648,13 @@
 
       weeksData[newKey] = {
         label: `Week of: ${userDate}`,
+        createdAt: new Date().toISOString(),
         items: clonedItems
       };
 
       currentWeekKey = newKey;
+      lastKnownLatestWeek = newKey;
+      userManuallySelectedWeek = false;
       saveWeeks();
       populateWeekSelector();
       renderTable();
