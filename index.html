@@ -568,6 +568,123 @@
       box-shadow: 0 0 0 2px var(--color-next-steps);
     }
 
+    /* Clickable Links inside cells and comments */
+    .cell-link {
+      color: #0284c7;
+      text-decoration: underline;
+      text-decoration-color: rgba(2, 132, 199, 0.45);
+      text-underline-offset: 3px;
+      font-weight: 500;
+      cursor: pointer !important;
+      display: inline;
+      word-break: break-all;
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+    .cell-link:hover {
+      color: #0369a1;
+      text-decoration-color: #0369a1;
+    }
+    .cell-link .link-icon {
+      font-size: 0.72em;
+      margin-left: 2px;
+      color: inherit;
+      opacity: 0.8;
+      display: inline-block;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Bullet and Number Marks in formatted view */
+    .cell-bullet-mark {
+      color: var(--primary);
+      font-weight: 700;
+      display: inline-block;
+      user-select: none;
+      margin-right: 4px;
+    }
+    .cell-number-mark {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.9em;
+      display: inline-block;
+      user-select: none;
+      margin-right: 4px;
+    }
+
+    /* Floating Cell Formatting Toolbar */
+    .cell-format-toolbar {
+      position: absolute;
+      display: none;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      padding: 3px 5px;
+      z-index: 1000;
+      gap: 3px;
+      align-items: center;
+      user-select: none;
+    }
+    .cell-format-toolbar.visible {
+      display: flex;
+    }
+    .toolbar-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 4px 7px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: inherit;
+      line-height: 1;
+      transition: all 0.15s ease;
+    }
+    .toolbar-btn:hover {
+      background: #f1f5f9;
+      color: var(--primary);
+      border-color: #e2e8f0;
+    }
+    .toolbar-btn i {
+      font-size: 0.82rem;
+    }
+    .toolbar-divider {
+      width: 1px;
+      height: 14px;
+      background: #e2e8f0;
+      margin: 0 2px;
+    }
+
+    /* Textarea quick tools in modal */
+    .textarea-quick-tools {
+      display: flex;
+      gap: 4px;
+    }
+    .btn-tool-mini {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .btn-tool-mini:hover {
+      background: #e2e8f0;
+      color: var(--primary);
+      border-color: #cbd5e1;
+    }
+
     /* Status Badges */
     .status-badge {
       display: inline-block;
@@ -984,7 +1101,7 @@
     <div class="edit-hint-bar">
       <div class="edit-hint">
         <i class="fa-solid fa-pen-to-square"></i>
-        <span>Click directly on any text (Partner, Status, Update, Next Steps) to edit. Changes auto-save immediately.</span>
+        <span>Click any cell to edit. Use toolbar or shortcuts for <b>• bullets</b>, <b>1. numbers</b>, and <b>🔗 links</b> (links auto-open in a new tab).</span>
       </div>
     </div>
 
@@ -1051,11 +1168,25 @@
           <input type="text" id="modalStatus" class="field-input" placeholder="e.g. Active, In Discussion, Paused" />
         </div>
         <div class="field-group">
-          <label for="modalUpdate">Current Update</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <label for="modalUpdate" style="margin-bottom: 0;">Current Update</label>
+            <div class="textarea-quick-tools">
+              <button type="button" class="btn-tool-mini" onclick="addToolToTextarea('modalUpdate', 'bullet')" title="Add bullet point (•)"><i class="fa-solid fa-list-ul"></i> Bullet</button>
+              <button type="button" class="btn-tool-mini" onclick="addToolToTextarea('modalUpdate', 'number')" title="Add numbered list (1, 2...)"><i class="fa-solid fa-list-ol"></i> Number</button>
+              <button type="button" class="btn-tool-mini" onclick="addToolToTextarea('modalUpdate', 'link')" title="Insert clickable link"><i class="fa-solid fa-link"></i> Link</button>
+            </div>
+          </div>
           <textarea id="modalUpdate" class="field-textarea" placeholder="Enter current status and progress..."></textarea>
         </div>
         <div class="field-group">
-          <label for="modalNext">What's Next</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <label for="modalNext" style="margin-bottom: 0;">What's Next</label>
+            <div class="textarea-quick-tools">
+              <button type="button" class="btn-tool-mini" onclick="addToolToTextarea('modalNext', 'bullet')" title="Add bullet point (•)"><i class="fa-solid fa-list-ul"></i> Bullet</button>
+              <button type="button" class="btn-tool-mini" onclick="addToolToTextarea('modalNext', 'number')" title="Add numbered list (1, 2...)"><i class="fa-solid fa-list-ol"></i> Number</button>
+              <button type="button" class="btn-tool-mini" onclick="addToolToTextarea('modalNext', 'link')" title="Insert clickable link"><i class="fa-solid fa-link"></i> Link</button>
+            </div>
+          </div>
           <textarea id="modalNext" class="field-textarea" placeholder="Enter immediate next steps..."></textarea>
         </div>
       </div>
@@ -1698,10 +1829,86 @@
       if (updatedTotalEl) updatedTotalEl.textContent = updatedTotal;
     }
 
-    function highlight(text, q) {
-      if (!q || !text) return text;
-      const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-      return text.replace(regex, '<span class="highlight-match">$1</span>');
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function highlightOutsideTags(html, q) {
+      if (!q || !html) return html;
+      const escapedQ = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedQ})`, 'gi');
+
+      // Split by HTML tags
+      const parts = html.split(/(<[^>]+>)/g);
+      for (let i = 0; i < parts.length; i++) {
+        if (!parts[i].startsWith('<')) {
+          parts[i] = parts[i].replace(regex, '<span class="highlight-match">$1</span>');
+        }
+      }
+      return parts.join('');
+    }
+
+    function renderFormattedCellContent(rawText, q) {
+      if (!rawText) return "";
+      
+      const lines = String(rawText).split("\n");
+      const processed = lines.map(line => {
+        let l = escapeHtml(line);
+
+        // 1. Format Markdown links: [text](https://...)
+        l = l.replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+|www\.[^\s\)]+)\)/gi, (m, label, url) => {
+          const href = url.startsWith("www.") ? "https://" + url : url;
+          return `<a href="${href}" class="cell-link" target="_blank" rel="noopener noreferrer" data-markdown="true" title="Open ${href}">${label} <i class="fa-solid fa-arrow-up-right-from-square link-icon"></i></a>`;
+        });
+
+        // 2. Format standalone URLs (https://... or http://... or www....)
+        l = l.replace(/(^|[\s(>])(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi, (m, prefix, url) => {
+          let cleanUrl = url;
+          let trailing = "";
+          const pMatch = cleanUrl.match(/[.,;:?!)]+$/);
+          if (pMatch) {
+            trailing = pMatch[0];
+            cleanUrl = cleanUrl.substring(0, cleanUrl.length - trailing.length);
+          }
+          const href = cleanUrl.startsWith("www.") ? "https://" + cleanUrl : cleanUrl;
+          return `${prefix}<a href="${href}" class="cell-link" target="_blank" rel="noopener noreferrer" title="Open ${href}">${cleanUrl} <i class="fa-solid fa-arrow-up-right-from-square link-icon"></i></a>${trailing}`;
+        });
+
+        // 3. Style bullet points (lines starting with '• ' or '- ' or '* ')
+        l = l.replace(/^(\s*)([•\-\*])\s+(.*)$/, '$1<span class="cell-bullet-mark">•</span> $3');
+
+        // 4. Style numbered lists (lines starting with '1. ' or '2) ')
+        l = l.replace(/^(\s*)(\d+[\.\)])\s+(.*)$/, '$1<span class="cell-number-mark">$2</span> $3');
+
+        // 5. Highlight search match
+        if (q && q.trim()) {
+          l = highlightOutsideTags(l, q.trim());
+        }
+
+        return l;
+      });
+
+      return processed.join("\n");
+    }
+
+    function extractCellText(el) {
+      if (!el) return "";
+      const clone = el.cloneNode(true);
+      clone.querySelectorAll(".link-icon").forEach(icon => icon.remove());
+      clone.querySelectorAll("a[data-markdown]").forEach(a => {
+        const label = a.textContent.trim();
+        const href = a.getAttribute("href");
+        a.replaceWith(`[${label}](${href})`);
+      });
+      clone.querySelectorAll(".cell-bullet-mark").forEach(s => s.replaceWith("• "));
+      clone.querySelectorAll(".cell-number-mark").forEach(s => s.replaceWith(s.textContent + " "));
+      return clone.innerText.trim();
     }
 
     function getStatusBadgeClass(status) {
@@ -1712,21 +1919,311 @@
       return "status-paused";
     }
 
-    // Inline cell edit handlers
-    window.handleCellFocus = function(el, id, field) {
+    let currentEditingEl = null;
+    let currentEditingId = null;
+    let currentEditingField = null;
+
+    function showFormatToolbar(el) {
+      currentEditingEl = el;
+      positionToolbar(el);
+      const tb = document.getElementById("cellFormatToolbar");
+      if (tb) tb.classList.add("visible");
+    }
+
+    function positionToolbar(el) {
+      const tb = document.getElementById("cellFormatToolbar");
+      if (!tb || !el) return;
+      const rect = el.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+      let top = rect.top + scrollTop - 40;
+      if (top < scrollTop + 10) {
+        top = rect.bottom + scrollTop + 6;
+      }
+      let left = rect.left + scrollLeft;
+      const tbWidth = 230;
+      if (left + tbWidth > window.innerWidth - 12) {
+        left = window.innerWidth - tbWidth - 12;
+      }
+      if (left < 10) left = 10;
+
+      tb.style.top = `${top}px`;
+      tb.style.left = `${left}px`;
+    }
+
+    function hideToolbar() {
+      const tb = document.getElementById("cellFormatToolbar");
+      if (tb) tb.classList.remove("visible");
+      currentEditingEl = null;
+    }
+
+    function applyBulletFormatting(el) {
+      if (!el) return;
+      el.focus();
+      const fullText = el.innerText || "";
+      const lines = fullText.split("\n");
+
+      const nonEmpty = lines.filter(l => l.trim().length > 0);
+      const allBulleted = nonEmpty.length > 0 && nonEmpty.every(l => /^\s*([•\-\*])\s+/.test(l));
+
+      const newLines = lines.map(line => {
+        if (!line.trim()) return line;
+        if (allBulleted) {
+          return line.replace(/^\s*([•\-\*])\s+/, "");
+        } else {
+          if (/^\s*\d+[\.\)]\s+/.test(line)) {
+            return line.replace(/^\s*\d+[\.\)]\s+/, "• ");
+          }
+          if (/^\s*([•\-\*])\s+/.test(line)) {
+            return line.replace(/^\s*([•\-\*])\s+/, "• ");
+          }
+          return "• " + line.trimStart();
+        }
+      });
+
+      el.innerText = newLines.join("\n");
+      triggerCellSave(el);
+      positionToolbar(el);
+    }
+
+    function applyNumberFormatting(el) {
+      if (!el) return;
+      el.focus();
+      const fullText = el.innerText || "";
+      const lines = fullText.split("\n");
+
+      const nonEmpty = lines.filter(l => l.trim().length > 0);
+      const allNumbered = nonEmpty.length > 0 && nonEmpty.every(l => /^\s*\d+[\.\)]\s+/.test(l));
+
+      let counter = 1;
+      const newLines = lines.map(line => {
+        if (!line.trim()) return line;
+        if (allNumbered) {
+          return line.replace(/^\s*\d+[\.\)]\s+/, "");
+        } else {
+          const clean = line.replace(/^\s*([•\-\*]|\d+[\.\)])\s+/, "");
+          const res = `${counter}. ${clean}`;
+          counter++;
+          return res;
+        }
+      });
+
+      el.innerText = newLines.join("\n");
+      triggerCellSave(el);
+      positionToolbar(el);
+    }
+
+    function applyLinkFormatting(el) {
+      if (!el) return;
+      el.focus();
+      const sel = window.getSelection();
+      const selectedText = sel ? sel.toString().trim() : "";
+      const promptMsg = selectedText ? `Enter link URL for "${selectedText}":` : "Enter link URL (e.g. https://example.com):";
+      const url = prompt(promptMsg, "https://");
+      if (!url || url.trim() === "" || url.trim() === "https://") return;
+
+      const cleanUrl = url.trim();
+      if (selectedText) {
+        document.execCommand("insertText", false, `[${selectedText}](${cleanUrl})`);
+      } else {
+        document.execCommand("insertText", false, cleanUrl);
+      }
+      triggerCellSave(el);
+      positionToolbar(el);
+    }
+
+    function triggerCellSave(el) {
+      if (!el) return;
+      const id = el.getAttribute("data-id") || currentEditingId;
+      const field = el.getAttribute("data-field") || currentEditingField;
+      if (!id || !field) return;
+
       const items = getActiveItems();
       const item = items.find(x => x.id === id);
       if (!item) return;
-      if (searchQuery.trim()) {
-        el.innerText = item[field] || "";
+
+      const newText = extractCellText(el);
+      if (item[field] !== newText) {
+        item[field] = newText;
+        if (field === 'update' || field === 'next' || field === 'status') {
+          item.updatedThisWeek = true;
+        }
+        saveWeeks();
+        showToast("Changes saved & marked as updated");
+        updateCounts();
+      }
+    }
+
+    window.handleCellKeydown = function(e, el) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        const sel = window.getSelection();
+        if (!sel || !sel.rangeCount) return;
+
+        const node = sel.anchorNode;
+        const text = node ? (node.textContent || "") : "";
+        const offset = sel.anchorOffset;
+        const lineText = text.substring(0, offset);
+
+        const lastNewline = lineText.lastIndexOf("\n");
+        const currentLine = lastNewline >= 0 ? lineText.substring(lastNewline + 1) : lineText;
+
+        const bMatch = currentLine.match(/^([•\-\*])\s*(.*)$/);
+        if (bMatch) {
+          e.preventDefault();
+          if (!bMatch[2].trim()) {
+            document.execCommand("delete");
+            document.execCommand("delete");
+            document.execCommand("insertText", false, "\n");
+          } else {
+            document.execCommand("insertText", false, "\n• ");
+          }
+          positionToolbar(el);
+          return;
+        }
+
+        const nMatch = currentLine.match(/^(\d+)[\.\)]\s*(.*)$/);
+        if (nMatch) {
+          e.preventDefault();
+          const num = parseInt(nMatch[1], 10);
+          if (!nMatch[2].trim()) {
+            document.execCommand("delete");
+            document.execCommand("delete");
+            document.execCommand("delete");
+            document.execCommand("insertText", false, "\n");
+          } else {
+            document.execCommand("insertText", false, `\n${num + 1}. `);
+          }
+          positionToolbar(el);
+          return;
+        }
+      } else if (e.key === "Escape") {
+        el.blur();
+        hideToolbar();
       }
     };
 
-    window.handleCellBlur = function(el, id, field) {
+    window.addToolToTextarea = function(textareaId, toolType) {
+      const ta = document.getElementById(textareaId);
+      if (!ta) return;
+      ta.focus();
+
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      const val = ta.value;
+      const selectedText = val.substring(start, end);
+
+      if (toolType === 'bullet') {
+        if (selectedText) {
+          const lines = selectedText.split("\n");
+          const bulleted = lines.map(l => l.trim() ? "• " + l.replace(/^([•\-\*]|\d+[\.\)])\s*/, "") : l).join("\n");
+          ta.value = val.substring(0, start) + bulleted + val.substring(end);
+          ta.selectionStart = start;
+          ta.selectionEnd = start + bulleted.length;
+        } else {
+          const prefix = (start > 0 && val[start - 1] !== '\n') ? "\n• " : "• ";
+          ta.value = val.substring(0, start) + prefix + val.substring(end);
+          ta.selectionStart = ta.selectionEnd = start + prefix.length;
+        }
+      } else if (toolType === 'number') {
+        if (selectedText) {
+          const lines = selectedText.split("\n");
+          let counter = 1;
+          const numbered = lines.map(l => {
+            if (!l.trim()) return l;
+            const res = `${counter}. ` + l.replace(/^([•\-\*]|\d+[\.\)])\s*/, "");
+            counter++;
+            return res;
+          }).join("\n");
+          ta.value = val.substring(0, start) + numbered + val.substring(end);
+          ta.selectionStart = start;
+          ta.selectionEnd = start + numbered.length;
+        } else {
+          const prefix = (start > 0 && val[start - 1] !== '\n') ? "\n1. " : "1. ";
+          ta.value = val.substring(0, start) + prefix + val.substring(end);
+          ta.selectionStart = ta.selectionEnd = start + prefix.length;
+        }
+      } else if (toolType === 'link') {
+        const url = prompt(selectedText ? `Enter URL for "${selectedText}":` : "Enter link URL (e.g. https://...):", "https://");
+        if (!url || url.trim() === "" || url.trim() === "https://") return;
+        const cleanUrl = url.trim();
+        const inserted = selectedText ? `[${selectedText}](${cleanUrl})` : cleanUrl;
+        ta.value = val.substring(0, start) + inserted + val.substring(end);
+        ta.selectionStart = ta.selectionEnd = start + inserted.length;
+      }
+    };
+
+    function attachModalTextareaKeydown(id) {
+      const ta = document.getElementById(id);
+      if (!ta) return;
+      ta.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const start = ta.selectionStart;
+          const val = ta.value;
+          const lastLineStart = val.lastIndexOf("\n", start - 1) + 1;
+          const line = val.substring(lastLineStart, start);
+
+          const bMatch = line.match(/^([•\-\*])\s*(.*)$/);
+          if (bMatch) {
+            e.preventDefault();
+            if (!bMatch[2].trim()) {
+              ta.value = val.substring(0, lastLineStart) + val.substring(start);
+              ta.selectionStart = ta.selectionEnd = lastLineStart;
+            } else {
+              ta.value = val.substring(0, start) + "\n• " + val.substring(start);
+              ta.selectionStart = ta.selectionEnd = start + 3;
+            }
+            return;
+          }
+
+          const nMatch = line.match(/^(\d+)[\.\)]\s*(.*)$/);
+          if (nMatch) {
+            e.preventDefault();
+            const num = parseInt(nMatch[1], 10);
+            if (!nMatch[2].trim()) {
+              ta.value = val.substring(0, lastLineStart) + val.substring(start);
+              ta.selectionStart = ta.selectionEnd = lastLineStart;
+            } else {
+              const insertStr = `\n${num + 1}. `;
+              ta.value = val.substring(0, start) + insertStr + val.substring(start);
+              ta.selectionStart = ta.selectionEnd = start + insertStr.length;
+            }
+            return;
+          }
+        }
+      });
+    }
+
+    // Inline cell edit handlers
+    window.handleCellFocus = function(el, id, field) {
+      currentEditingEl = el;
+      currentEditingId = id;
+      currentEditingField = field;
+
       const items = getActiveItems();
       const item = items.find(x => x.id === id);
       if (!item) return;
-      const newText = el.innerText.trim();
+
+      if (searchQuery.trim()) {
+        el.innerText = item[field] || "";
+      }
+
+      showFormatToolbar(el);
+    };
+
+    window.handleCellBlur = function(el, id, field) {
+      setTimeout(() => {
+        const active = document.activeElement;
+        if (!active || !active.classList || !active.classList.contains("editable-cell")) {
+          hideToolbar();
+        }
+      }, 150);
+
+      const items = getActiveItems();
+      const item = items.find(x => x.id === id);
+      if (!item) return;
+
+      const newText = extractCellText(el);
       if (item[field] !== newText) {
         item[field] = newText;
         if (field === 'update' || field === 'next' || field === 'status') {
@@ -1735,6 +2232,8 @@
         saveWeeks();
         showToast("Changes saved & marked as updated");
         renderTable();
+      } else {
+        el.innerHTML = renderFormattedCellContent(newText, searchQuery);
       }
     };
 
@@ -1821,7 +2320,7 @@
           it.comments.forEach((c, idx) => {
             commentsHtml += `
               <div class="comment-bubble">
-                <span class="comment-by">${c.author}:</span> ${highlight(c.text, q)}
+                <span class="comment-by">${c.author}:</span> ${renderFormattedCellContent(c.text, q)}
                 <button class="comment-delete" onclick="deleteComment('${it.id}', ${idx})" title="Delete">&times;</button>
               </div>
             `;
@@ -1832,7 +2331,7 @@
 
         tr.innerHTML = `
           <td class="col-partner">
-            <div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'partner')" onblur="handleCellBlur(this, '${it.id}', 'partner')" title="Click to edit">${highlight(it.partner, q)}</div>
+            <div class="editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="partner" onfocus="handleCellFocus(this, '${it.id}', 'partner')" onblur="handleCellBlur(this, '${it.id}', 'partner')" onkeydown="handleCellKeydown(event, this)" title="Click to edit">${renderFormattedCellContent(it.partner, q)}</div>
             ${it.updatedThisWeek 
               ? `<div class="badge-updated" onclick="toggleUpdated('${it.id}', event)" title="Click to remove update badge"><i class="fa-solid fa-bolt"></i> UPDATED</div>` 
               : `<button class="btn-mark-update" onclick="toggleUpdated('${it.id}', event)" title="Click to highlight as updated this week">+ Mark Updated</button>`
@@ -1840,10 +2339,10 @@
             ${q && it.stage !== currentTab ? `<div style="font-size: 0.68rem; color: #64748b; font-weight: normal; margin-top: 3px;">[${getTabName(it.stage)}]</div>` : ''}
           </td>
           <td class="col-status">
-            <span class="status-badge ${badgeClass} editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'status')" onblur="handleCellBlur(this, '${it.id}', 'status')" title="Click to edit status">${highlight(it.status || 'Active', q)}</span>
+            <span class="status-badge ${badgeClass} editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="status" onfocus="handleCellFocus(this, '${it.id}', 'status')" onblur="handleCellBlur(this, '${it.id}', 'status')" onkeydown="handleCellKeydown(event, this)" title="Click to edit status">${renderFormattedCellContent(it.status || 'Active', q)}</span>
           </td>
-          <td class="col-update"><div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'update')" onblur="handleCellBlur(this, '${it.id}', 'update')" title="Click to edit">${highlight(it.update, q)}</div></td>
-          <td class="col-next"><div class="editable-cell" contenteditable="true" spellcheck="false" onfocus="handleCellFocus(this, '${it.id}', 'next')" onblur="handleCellBlur(this, '${it.id}', 'next')" title="Click to edit">${highlight(it.next, q)}</div></td>
+          <td class="col-update"><div class="editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="update" onfocus="handleCellFocus(this, '${it.id}', 'update')" onblur="handleCellBlur(this, '${it.id}', 'update')" onkeydown="handleCellKeydown(event, this)" title="Click to edit">${renderFormattedCellContent(it.update, q)}</div></td>
+          <td class="col-next"><div class="editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="next" onfocus="handleCellFocus(this, '${it.id}', 'next')" onblur="handleCellBlur(this, '${it.id}', 'next')" onkeydown="handleCellKeydown(event, this)" title="Click to edit">${renderFormattedCellContent(it.next, q)}</div></td>
           <td class="col-move">
             <select class="stage-select" onchange="moveStage('${it.id}', this.value)">
               <option value="ongoing" ${it.stage === 'ongoing' ? 'selected' : ''}>Ongoing</option>
@@ -2123,6 +2622,62 @@
     loadWeeks();
     initFirebaseSync();
     renderTable();
+
+    // Floating Cell Formatting Toolbar listeners
+    const tb = document.getElementById("cellFormatToolbar");
+    if (tb) {
+      tb.addEventListener("mousedown", (e) => e.preventDefault());
+      document.getElementById("tbBtnBullet").addEventListener("click", () => applyBulletFormatting(currentEditingEl));
+      document.getElementById("tbBtnNumber").addEventListener("click", () => applyNumberFormatting(currentEditingEl));
+      document.getElementById("tbBtnLink").addEventListener("click", () => applyLinkFormatting(currentEditingEl));
+    }
+
+    attachModalTextareaKeydown("modalUpdate");
+    attachModalTextareaKeydown("modalNext");
+
+    // Global click capture to reliably open all links in a new tab
+    document.addEventListener("click", function(e) {
+      const link = e.target.closest(".cell-link");
+      if (link && link.href) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(link.href, "_blank", "noopener,noreferrer");
+      }
+    }, true);
+
+    window.addEventListener("scroll", () => {
+      if (currentEditingEl && document.activeElement === currentEditingEl) {
+        positionToolbar(currentEditingEl);
+      }
+    }, { passive: true });
+
+    window.addEventListener("resize", () => {
+      if (currentEditingEl && document.activeElement === currentEditingEl) {
+        positionToolbar(currentEditingEl);
+      }
+    });
+
+    // Close floating toolbar when clicking outside
+    document.addEventListener("mousedown", (e) => {
+      if (e.target.closest("#cellFormatToolbar") || e.target.closest(".editable-cell")) {
+        return;
+      }
+      hideToolbar();
+    });
   </script>
+
+  <!-- Floating Cell Formatting Toolbar -->
+  <div id="cellFormatToolbar" class="cell-format-toolbar">
+    <button type="button" class="toolbar-btn" id="tbBtnBullet" title="Add / toggle bullet points (•)">
+      <i class="fa-solid fa-list-ul" style="color: #0284c7;"></i> Bullet
+    </button>
+    <button type="button" class="toolbar-btn" id="tbBtnNumber" title="Add / toggle numbered list (1, 2, 3...)">
+      <i class="fa-solid fa-list-ol" style="color: #0284c7;"></i> Number
+    </button>
+    <div class="toolbar-divider"></div>
+    <button type="button" class="toolbar-btn" id="tbBtnLink" title="Insert clickable link URL">
+      <i class="fa-solid fa-link" style="color: #0284c7;"></i> Link
+    </button>
+  </div>
 </body>
 </html>
