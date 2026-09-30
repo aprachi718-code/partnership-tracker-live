@@ -276,6 +276,105 @@
       background: #f8fafc;
     }
 
+    .week-right-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Copy Table Dropdown & Button */
+    .copy-dropdown-group {
+      position: relative;
+      display: inline-flex;
+      vertical-align: middle;
+    }
+
+    .btn-copy-table {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-right: none;
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px 0 0 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-copy-caret {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: #64748b;
+      padding: 4px 7px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.68rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy-table:hover, .btn-copy-caret:hover {
+      background: #f8fafc;
+      color: var(--primary);
+      border-color: #cbd5e1;
+    }
+
+    .btn-copy-table.copied {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #15803d;
+    }
+
+    .copy-menu {
+      position: absolute;
+      top: calc(100% + 5px);
+      right: 0;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      padding: 4px;
+      min-width: 260px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .copy-menu.open {
+      display: block;
+    }
+
+    .copy-menu-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      font-size: 0.78rem;
+      color: var(--text-main);
+      text-align: left;
+    }
+
+    .copy-menu-item:hover {
+      background-color: #f1f5f9;
+    }
+
+    .copy-menu-item i {
+      margin-top: 2px;
+      font-size: 0.85rem;
+      color: var(--primary);
+    }
+
     .btn-filter-toggle {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -1008,6 +1107,10 @@
         width: 100%;
         justify-content: space-between;
       }
+      .week-right-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
       .tabs-nav {
         overflow-x: auto;
         white-space: nowrap;
@@ -1027,6 +1130,209 @@
         font-size: 0.72rem;
       }
     }
+
+    /* ===================== INTEL VIEW ===================== */
+    .view-switcher {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      padding: 3px;
+    }
+    .view-switcher-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .view-switcher-btn:hover {
+      color: #ffffff;
+      background: rgba(255,255,255,0.12);
+    }
+    .view-switcher-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    #intelView {
+      display: none;
+    }
+    #weeklyView {
+      display: block;
+    }
+    #intelView.active {
+      display: block;
+    }
+    #weeklyView.hidden {
+      display: none;
+    }
+
+    .intel-view-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .intel-view-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .intel-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1565c0;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    .intel-view-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .intel-table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .intel-tracker {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      background: #ffffff;
+    }
+    .intel-tracker thead tr {
+      background: #1565c0;
+      color: #ffffff;
+    }
+    .intel-tracker th {
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.3px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .intel-tracker td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .intel-tracker tr:last-child td {
+      border-bottom: none;
+    }
+    .intel-tracker tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .intel-tracker tbody tr:hover {
+      background: #f0f6ff;
+    }
+
+    .intel-col-activity { width: 22%; }
+    .intel-col-status   { width: 14%; }
+    .intel-col-update   { width: 36%; }
+    .intel-col-next     { width: 28%; }
+
+    .intel-activity-label {
+      font-weight: 700;
+      color: var(--text-main);
+      display: block;
+    }
+    .intel-activity-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .intel-cell-editable {
+      min-height: 28px;
+      outline: none;
+      border-radius: 4px;
+      padding: 2px 4px;
+      transition: background 0.12s ease, box-shadow 0.12s ease;
+      cursor: text;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .intel-cell-editable:focus {
+      background: #fffbeb;
+      box-shadow: 0 0 0 2px #fbbf24;
+    }
+
+    .intel-add-row-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 0.75rem;
+      background: #f0f6ff;
+      border: 1px dashed #93c5fd;
+      color: #1565c0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 7px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .intel-add-row-btn:hover {
+      background: #dbeafe;
+      border-color: #3b82f6;
+    }
+
+    .intel-status-badge {
+      display: inline-block;
+      font-size: 0.70rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .intel-status-active      { background: #dcfce7; color: #15803d; }
+    .intel-status-progress    { background: #e0f2fe; color: #0369a1; }
+    .intel-status-paused      { background: #fef3c7; color: #92400e; }
+    .intel-status-hold        { background: #f1f5f9; color: #64748b; }
+    .intel-status-signed      { background: #f3e8ff; color: #7e22ce; }
+
+    .intel-section-divider td {
+      background: #dbeafe;
+      padding: 6px 14px;
+      font-size: 0.70rem;
+      font-weight: 800;
+      color: #1d4ed8;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .intel-col-activity { width: 28%; }
+      .intel-col-status   { width: 18%; }
+    }
   </style>
 </head>
 <body>
@@ -1036,6 +1342,14 @@
     <div class="top-bar-inner">
       <div class="brand-group">
         <div class="brand-title">Weekly Partnership Updates</div>
+        <div class="view-switcher" style="margin-top: 4px;">
+          <button class="view-switcher-btn active" id="btnViewWeekly" onclick="switchView('weekly')">
+            <i class="fa-solid fa-calendar-week"></i> Partnerships
+          </button>
+          <button class="view-switcher-btn" id="btnViewIntel" onclick="switchView('intel')">
+            <i class="fa-solid fa-microchip"></i> Intel View
+          </button>
+        </div>
       </div>
 
       <!-- Instant Search -->
@@ -1065,6 +1379,7 @@
     </div>
   </div>
 
+  <div id="weeklyView">
   <!-- Container -->
   <div class="container">
 
@@ -1079,9 +1394,45 @@
           <i class="fa-solid fa-bolt" style="color: #10b981;"></i> Only Updated (<span id="count-updated-total">0</span>)
         </button>
       </div>
-      <button class="btn-new-week" id="btnCreateNewWeek">
-        <i class="fa-solid fa-calendar-plus"></i> + Start Next Week's Update
-      </button>
+      <div class="week-right-actions">
+        <!-- COPY TABLE DROPDOWN -->
+        <div class="copy-dropdown-group" id="copyDropdownGroup">
+          <button class="btn-copy-table" id="btnCopyTable" onclick="copyCurrentTable()" title="Copy formatted table (Brand, Status, Current Update, Next Steps)">
+            <i class="fa-regular fa-copy"></i>
+            <span id="copyBtnText">Copy Table</span>
+          </button>
+          <button class="btn-copy-caret" id="btnCopyCaret" onclick="toggleCopyMenu(event)" title="More copy options">
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="copy-menu" id="copyMenu">
+            <div class="copy-menu-item" onclick="copyTableWithScope('current')">
+              <i class="fa-regular fa-copy"></i>
+              <div>
+                <strong>Copy <span id="copyScopeTabName">Ongoing</span> Deals</strong>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Copies deals in the currently selected tab</div>
+              </div>
+            </div>
+            <div class="copy-menu-item" onclick="copyTableWithScope('updated')">
+              <i class="fa-solid fa-bolt" style="color: #10b981;"></i>
+              <div>
+                <strong>Copy Only Updated Deals</strong>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Only partnerships with updates recorded this week</div>
+              </div>
+            </div>
+            <div class="copy-menu-item" onclick="copyTableWithScope('all')">
+              <i class="fa-solid fa-table-list"></i>
+              <div>
+                <strong>Copy All Partnerships</strong>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Full table across Ongoing, New, and Not Moving</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-new-week" id="btnCreateNewWeek">
+          <i class="fa-solid fa-calendar-plus"></i> + Start Next Week's Update
+        </button>
+      </div>
     </div>
 
     <!-- 3 TABS (Ongoing, New, Not Moving Forward) -->
@@ -1136,6 +1487,187 @@
     </div>
 
   </div>
+  </div><!-- /weeklyView -->
+
+  <!-- ========================= INTEL VIEW ========================= -->
+  <div id="intelView" class="container">
+
+    <div class="intel-view-header">
+      <div class="intel-view-title">
+        <span class="intel-logo-badge"><i class="fa-solid fa-microchip"></i> Intel Partnership Tracker</span>
+        <div>
+          <div style="font-size: 1rem; font-weight: 700; color: var(--text-main);">Intel Activities — IL View</div>
+          <div class="intel-view-subtitle">All Intel-related activities across AINA App, OEM Partners, Programs & MDF</div>
+        </div>
+      </div>
+      <button class="intel-add-row-btn" onclick="intelAddRow()">
+        <i class="fa-solid fa-plus"></i> Add Row
+      </button>
+    </div>
+
+    <div class="intel-table-container">
+      <table class="intel-tracker">
+        <thead>
+          <tr>
+            <th class="intel-col-activity">Activity</th>
+            <th class="intel-col-status">Status</th>
+            <th class="intel-col-update">Current Update</th>
+            <th class="intel-col-next">Next Steps</th>
+          </tr>
+        </thead>
+        <tbody id="intelTableBody">
+          <!-- Section: AINA App -->
+          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-desktop"></i> &nbsp;AINA Windows App</td></tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">IL AINA Windows App</span>
+              <span class="intel-activity-sub">AI PC App — Hard Bundling</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">In Progress</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-1" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Windows app published and rolled out to 10% users. Build 1.5.6 is the latest production build. Microsoft Digital Signature for hard bundling to be completed. iGPU + NPU integration done, final tests in progress.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-1" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">Offline Build</span>
+              <span class="intel-activity-sub">IL AINA Offline on AI PC</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">WIP</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-2" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Being prioritised over WCL. Tech Team meeting on 11 May with a solution. Build link: storage.googleapis.com/aina-user-assets/intel_aina_assets/desktop/InfinityLearn-Setup-1.5.6.exe</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-2" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">Microsoft Store Listing</span>
+              <span class="intel-activity-sub">IL AI PC App on MS Store</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">WIP</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-3" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL Team to list build on Microsoft Store by 8th June, post which sharing exe won't be required.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-3" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">WCL Testing</span>
+              <span class="intel-activity-sub">AI PC Event — WCL &amp; PTL</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">In Progress</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-4" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">WCL Testing started, to be completed by 8th June. Tech team to share report. PTL testing done. PTL device shipped, demo ready and showcased at AI PC Innovation event.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-4" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <!-- Section: OEM Partners -->
+          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-laptop"></i> &nbsp;OEM Partners</td></tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">HP</span>
+              <span class="intel-activity-sub">Hard bundling — Tech &amp; Marketing</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">In Discussion</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-hp" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Tech Track: IL team to restart marketing thread after updated app is shared with HP. Build shared with HP senior management (Ipsita + leaders), demo conducted 23rd Apr. Marketing Track: Kanika Puri is now HP's Consumer Marketing SPOC (Vivek moved verticals). Awaiting slot from Kanika.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-hp" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">Samsung</span>
+              <span class="intel-activity-sub">Soft bundling — Offer + GTM</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">Legal Review</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-samsung" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Ranadip has sent updated agreement. Samsung legal team reviewing. Gives and gets finalised. IL shared calendar view of customer journey, engagement points, and self-learn course offering details. Approval happens only twice a month — targeting before 15th Aug or 30th Aug. Intel had escalated internally.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-samsung" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">Acer</span>
+              <span class="intel-activity-sub">Hard bundling — AI PC</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">In Discussion</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-acer" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL, Intel and Acer had a meeting 9th June. Acer asked app to be Windows/Microsoft compliant for re-negotiation on pricing. Hard bundling delayed by 10-15 mins. Sondhi Ji was travelling, Bala shared 3 laptops for testing (Intel-based 11.6", 14", Chromebook). Acer requested Linux build check. Sep: Infographics updated, marketing plan pending, Raja suggested campaign when BBD isn't happening.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-acer" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">Croma</span>
+              <span class="intel-activity-sub">Retail bundling</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-hold">On Hold</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-croma" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Croma is OOF. Meeting expected Thursday or early next week. On hold till tech is ready. Intel Team to reach out once Croma team is back. Raghu to update.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-croma" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <!-- Section: Programs & Campaigns -->
+          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-handshake"></i> &nbsp;Programs &amp; Campaigns</td></tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">SFI — AI Course for Educators</span>
+              <span class="intel-activity-sub">Content licensing + Workshops</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-active">Active</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-sfi" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Mutually signed agreement confirmed. One-liner for commercialisation approved. Instructor training started (first session 7th May). 4 sessions conducted. 2nd workshop (13th Aug) for 80 teachers. LMS integration planned — SFI shared SCORM files. July: 74 teachers. August target: 100–200 teachers. Sep: Conducted session for 100 more teachers, planning another session for 300 more.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-sfi" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">IDR — Intel DevCloud</span>
+              <span class="intel-activity-sub">Content integration + Buildathon + School Labs</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">In Progress</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-idr" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL Team had a call with Saloni (Intel). Saloni approved use of Intel content &amp; branding for Reliance tie-up. Screenshots to be sent for record. Integrated with Amazon workshops. School workshop program picking up post summer vacation — targeting 50,000 students this year. Previous workshop images &amp; certificates shared. Sep: Planning proposal for buildathon and labs.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-idr" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">Reliance Digital (RD)</span>
+              <span class="intel-activity-sub">BTS Campaign — Intel + IL</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-active">Campaign Live</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-rd" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Campaign is LIVE. Promotions started from IL's end. Microsite, coupon codes and process doc shared with RIL. IL noticed PR releases without IL mention — raised with RIL. RIL informed it was a leadership call and cannot be changed. IL has mailed RIL, awaiting final response. Intel approval taken for AI Course. Sep: No update.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-rd" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">Amazon</span>
+              <span class="intel-activity-sub">AI Workshops + Olympiad Partnership</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-paused">Stalled</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-amazon" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Amazon team unable to conduct AI workshops in partner schools due to internal reasons. IL has taken multiple follow-ups on WhatsApp — no response. Irfan said no budgets due to Prime Day. Sep: Called Irfan, no response. Infographic created. Amazon shared reference landing page, IL to build landing page and share. Not Proceeding on that track.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-amazon" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+          <!-- Section: MDF -->
+          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-coins"></i> &nbsp;MDF — Marketing Development Fund</td></tr>
+
+          <tr>
+            <td>
+              <span class="intel-activity-label">MDF Plan 2026</span>
+              <span class="intel-activity-sub">IL Marketing Activities</span>
+            </td>
+            <td><span class="intel-status-badge intel-status-progress">Awaiting Intel</span></td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="mdf-1" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL Team has shared MDF plan with Intel Team. Intel to review and come back. Intel informed there's a shortage of budgets for this quarter. MDF submitted for Acer. Techspark MDF to be submitted. Sep: Anupama is discussing with Pankaj. Submitted MDF for Acer.</td>
+            <td class="intel-cell-editable" contenteditable="true" data-intel-id="mdf-1" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <button class="intel-add-row-btn" onclick="intelAddRow()" style="margin-top: 0.85rem;">
+      <i class="fa-solid fa-plus"></i> Add Row
+    </button>
+
+  </div>
+  <!-- /intelView -->
 
   <!-- Toast Notification -->
   <div class="toast-notify" id="toastNotify">
@@ -2386,6 +2918,251 @@
       }
     }
 
+    /* ============================================================
+       COPY TABLE FUNCTIONALITY (Brand, Status, Current Update, Next Steps)
+       ============================================================ */
+
+    window.toggleCopyMenu = function(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById("copyMenu");
+      if (menu) menu.classList.toggle("open");
+    };
+
+    window.closeCopyMenu = function() {
+      const menu = document.getElementById("copyMenu");
+      if (menu) menu.classList.remove("open");
+    };
+
+    function escapeHtmlForCopy(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatCellHtmlForCopy(rawText) {
+      if (!rawText || rawText.trim() === "") return "-";
+      const lines = String(rawText).split("\n");
+      const processed = lines.map(line => {
+        let l = escapeHtmlForCopy(line.trim());
+        if (!l) return "";
+
+        // Markdown links: [label](url)
+        l = l.replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+|www\.[^\s\)]+)\)/gi, (m, label, url) => {
+          const href = url.startsWith("www.") ? "https://" + url : url;
+          return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#0284c7;text-decoration:underline;">${label}</a>`;
+        });
+
+        // Bare URLs
+        l = l.replace(/(^|[\s(>])(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi, (m, prefix, url) => {
+          let cleanUrl = url;
+          let trailing = "";
+          const pMatch = cleanUrl.match(/[.,;:?!)]+$/);
+          if (pMatch) {
+            trailing = pMatch[0];
+            cleanUrl = cleanUrl.substring(0, cleanUrl.length - trailing.length);
+          }
+          const href = cleanUrl.startsWith("www.") ? "https://" + cleanUrl : cleanUrl;
+          return `${prefix}<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#0284c7;text-decoration:underline;">${cleanUrl}</a>${trailing}`;
+        });
+
+        return l;
+      });
+
+      return processed.filter(x => x.length > 0).join("<br>");
+    }
+
+    function formatCellPlainForCopy(rawText) {
+      if (!rawText || rawText.trim() === "") return "-";
+      let s = String(rawText).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+      // Clean markdown links: [text](url) -> text (url)
+      s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+|www\.[^\s\)]+)\)/gi, (m, label, url) => {
+        return label === url ? url : `${label} (${url})`;
+      });
+      return s;
+    }
+
+    function tsvEscape(val) {
+      const s = formatCellPlainForCopy(val);
+      if (s.includes('\t') || s.includes('\n') || s.includes('"')) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }
+
+    function getStatusBadgeStyle(status) {
+      if (!status) return 'background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;';
+      const s = status.toLowerCase();
+      if (s.includes("active") || s.includes("signed")) {
+        return 'background:#dcfce7;color:#15803d;border:1px solid #86efac;';
+      }
+      if (s.includes("progress") || s.includes("discussion") || s.includes("shared") || s.includes("planning") || s.includes("review") || s.includes("outreach")) {
+        return 'background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;';
+      }
+      return 'background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;';
+    }
+
+    function generateTableDataForCopy(items) {
+      // 1. Generate Rich HTML Table (perfect for Docs, Word, Gmail, Slack)
+      let html = `<table style="border-collapse:collapse;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;color:#1e293b;width:100%;border:1px solid #cbd5e1;line-height:1.5;">\n`;
+      html += `  <thead>\n`;
+      html += `    <tr style="background-color:#244c59;color:#ffffff;text-align:left;">\n`;
+      html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:22%;">Brand</th>\n`;
+      html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:16%;">Status</th>\n`;
+      html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:34%;">Current Update</th>\n`;
+      html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:28%;">Next Steps</th>\n`;
+      html += `    </tr>\n`;
+      html += `  </thead>\n`;
+      html += `  <tbody>\n`;
+
+      // 2. Generate TSV (perfect for Google Sheets & Excel)
+      let tsv = `Brand\tStatus\tCurrent Update\tNext Steps\r\n`;
+
+      items.forEach((it, idx) => {
+        const bg = idx % 2 === 0 ? '#ffffff' : '#f8fafc';
+        const statusStyle = getStatusBadgeStyle(it.status);
+
+        html += `    <tr style="background-color:${bg};">\n`;
+        html += `      <td style="padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top;font-weight:600;">\n`;
+        html += `        ${escapeHtmlForCopy(it.partner)}\n`;
+        if (it.updatedThisWeek) {
+          html += `        <span style="display:inline-block;margin-left:6px;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;">UPDATED</span>\n`;
+        }
+        html += `      </td>\n`;
+        html += `      <td style="padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top;">\n`;
+        html += `        <span style="display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;${statusStyle}">${escapeHtmlForCopy(it.status || 'Active')}</span>\n`;
+        html += `      </td>\n`;
+        html += `      <td style="padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top;">${formatCellHtmlForCopy(it.update)}</td>\n`;
+        html += `      <td style="padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top;">${formatCellHtmlForCopy(it.next)}</td>\n`;
+        html += `    </tr>\n`;
+
+        tsv += `${tsvEscape(it.partner)}\t${tsvEscape(it.status || 'Active')}\t${tsvEscape(it.update || '-')}\t${tsvEscape(it.next || '-')}\r\n`;
+      });
+
+      html += `  </tbody>\n`;
+      html += `</table>`;
+
+      return { html, tsv };
+    }
+
+    async function copyTableData(htmlContent, tsvContent, count, scopeDesc) {
+      try {
+        if (navigator.clipboard && window.ClipboardItem) {
+          const blobHtml = new Blob([htmlContent], { type: "text/html" });
+          const blobText = new Blob([tsvContent], { type: "text/plain" });
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": blobHtml,
+              "text/plain": blobText
+            })
+          ]);
+        } else {
+          const hiddenDiv = document.createElement("div");
+          hiddenDiv.style.position = "fixed";
+          hiddenDiv.style.left = "-9999px";
+          hiddenDiv.style.top = "-9999px";
+          hiddenDiv.innerHTML = htmlContent;
+          document.body.appendChild(hiddenDiv);
+          const range = document.createRange();
+          range.selectNodeContents(hiddenDiv);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          document.execCommand("copy");
+          sel.removeAllRanges();
+          document.body.removeChild(hiddenDiv);
+        }
+
+        const btn = document.getElementById("btnCopyTable");
+        const btnText = document.getElementById("copyBtnText");
+        if (btn) btn.classList.add("copied");
+        if (btnText) btnText.textContent = "Copied!";
+        showToast(`✓ Copied ${count} partnerships (${scopeDesc}) to clipboard`);
+        setTimeout(() => {
+          if (btn) btn.classList.remove("copied");
+          if (btnText) btnText.textContent = "Copy Table";
+        }, 2000);
+      } catch (err) {
+        console.error("Clipboard copy failed:", err);
+        showToast("Failed to copy table to clipboard");
+      }
+    }
+
+    window.copyCurrentTable = function() {
+      closeCopyMenu();
+      const allItems = getActiveItems();
+      let list = allItems.slice();
+
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        list = list.filter(it => 
+          (it.partner && it.partner.toLowerCase().includes(q)) ||
+          (it.status && it.status.toLowerCase().includes(q)) ||
+          (it.update && it.update.toLowerCase().includes(q)) ||
+          (it.next && it.next.toLowerCase().includes(q))
+        );
+      } else {
+        list = list.filter(it => it.stage === currentTab);
+      }
+
+      if (filterOnlyUpdated) {
+        list = list.filter(it => it.updatedThisWeek);
+      }
+
+      // Sort: updated on top, unchanged below
+      list.sort((a, b) => {
+        const aUp = a.updatedThisWeek ? 1 : 0;
+        const bUp = b.updatedThisWeek ? 1 : 0;
+        return bUp - aUp;
+      });
+
+      if (list.length === 0) {
+        showToast("No partnerships to copy in current view");
+        return;
+      }
+
+      const { html, tsv } = generateTableDataForCopy(list);
+      const tabName = getTabName(currentTab);
+      const scopeDesc = searchQuery ? "Search Results" : (filterOnlyUpdated ? `${tabName} • Updated` : tabName);
+      copyTableData(html, tsv, list.length, scopeDesc);
+    };
+
+    window.copyTableWithScope = function(scope) {
+      closeCopyMenu();
+      const allItems = getActiveItems();
+      let list = [];
+      let scopeDesc = "";
+
+      if (scope === "current") {
+        list = allItems.filter(it => it.stage === currentTab);
+        scopeDesc = getTabName(currentTab);
+      } else if (scope === "updated") {
+        list = allItems.filter(it => it.updatedThisWeek);
+        scopeDesc = "Only Updated Deals";
+      } else if (scope === "all") {
+        list = allItems.slice();
+        scopeDesc = "All Partnerships";
+      }
+
+      // Sort updated first
+      list.sort((a, b) => {
+        const aUp = a.updatedThisWeek ? 1 : 0;
+        const bUp = b.updatedThisWeek ? 1 : 0;
+        return bUp - aUp;
+      });
+
+      if (list.length === 0) {
+        showToast(`No partnerships found for "${scopeDesc}"`);
+        return;
+      }
+
+      const { html, tsv } = generateTableDataForCopy(list);
+      copyTableData(html, tsv, list.length, scopeDesc);
+    };
+
     // Move Stage
     window.moveStage = function(id, newStage) {
       const items = getActiveItems();
@@ -2445,6 +3222,8 @@
         document.querySelectorAll(".tab-item").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         currentTab = btn.getAttribute("data-tab");
+        const scopeTabSpan = document.getElementById("copyScopeTabName");
+        if (scopeTabSpan) scopeTabSpan.textContent = getTabName(currentTab);
         renderTable();
       });
     });
@@ -2623,6 +3402,96 @@
     initFirebaseSync();
     renderTable();
 
+    // ================================================================
+    //  INTEL VIEW — switchView, persistence, add row, editable cells
+    // ================================================================
+    const INTEL_DATA_KEY = "il_intel_view_data_v1";
+
+    function saveIntelData() {
+      const data = {};
+      document.querySelectorAll(".intel-cell-editable").forEach(cell => {
+        const id = cell.getAttribute("data-intel-id");
+        const field = cell.getAttribute("data-intel-field");
+        if (id && field) {
+          if (!data[id]) data[id] = {};
+          data[id][field] = cell.innerText.trim();
+        }
+      });
+      try { localStorage.setItem(INTEL_DATA_KEY, JSON.stringify(data)); } catch(e) {}
+    }
+
+    function loadIntelData() {
+      try {
+        const raw = localStorage.getItem(INTEL_DATA_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        document.querySelectorAll(".intel-cell-editable").forEach(cell => {
+          const id = cell.getAttribute("data-intel-id");
+          const field = cell.getAttribute("data-intel-field");
+          if (id && field && data[id] && data[id][field] !== undefined) {
+            cell.innerText = data[id][field];
+          }
+        });
+      } catch(e) {}
+    }
+
+    window.saveIntelCell = function(cell) {
+      saveIntelData();
+    };
+
+    window.handleIntelKeydown = function(e, cell) {
+      if (e.key === "Escape") {
+        cell.blur();
+      }
+      // Allow Enter for new lines (default behaviour, no special handling needed)
+    };
+
+    window.intelAddRow = function() {
+      const activity = prompt("Activity name (e.g. 'New Workshop'):","");
+      if (!activity) return;
+      const subLabel = prompt("Sub-label (e.g. 'Q4 initiative'):", "") || "";
+      const status = prompt("Status (e.g. 'In Progress', 'On Hold', 'Active'):", "In Progress") || "In Progress";
+
+      const id = "custom-" + Date.now();
+      const tbody = document.getElementById("intelTableBody");
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <span class="intel-activity-label">${escapeHtml(activity)}</span>
+          ${subLabel ? `<span class="intel-activity-sub">${escapeHtml(subLabel)}</span>` : ""}
+        </td>
+        <td><span class="intel-status-badge intel-status-progress">${escapeHtml(status)}</span></td>
+        <td class="intel-cell-editable" contenteditable="true" data-intel-id="${id}" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+        <td class="intel-cell-editable" contenteditable="true" data-intel-id="${id}" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
+      `;
+      tbody.appendChild(tr);
+      showToast("Row added — click the Update or Next Steps cell to edit");
+    };
+
+    window.switchView = function(view) {
+      const weeklyView = document.getElementById("weeklyView");
+      const intelView = document.getElementById("intelView");
+      const btnWeekly = document.getElementById("btnViewWeekly");
+      const btnIntel = document.getElementById("btnViewIntel");
+
+      if (view === "intel") {
+        weeklyView.classList.add("hidden");
+        intelView.classList.add("active");
+        btnWeekly.classList.remove("active");
+        btnIntel.classList.add("active");
+        loadIntelData();
+      } else {
+        intelView.classList.remove("active");
+        weeklyView.classList.remove("hidden");
+        btnIntel.classList.remove("active");
+        btnWeekly.classList.add("active");
+      }
+    };
+
+    // Load any saved Intel cell edits on page load
+    loadIntelData();
+
     // Floating Cell Formatting Toolbar listeners
     const tb = document.getElementById("cellFormatToolbar");
     if (tb) {
@@ -2663,6 +3532,11 @@
         return;
       }
       hideToolbar();
+
+      // Also close copy menu if clicking outside of it
+      if (!e.target.closest("#copyDropdownGroup")) {
+        closeCopyMenu();
+      }
     });
   </script>
 
