@@ -1725,8 +1725,8 @@
           { key: "live", label: "Live" },
           { key: "not-live", label: "Not Live" }
         ],
-        // Rows saved under the old categories (aina / oem / programs / mdf) are sorted by status
-        legacyStage: it => /live|active/i.test(it.status || "") ? "live" : "not-live",
+        // Rows saved under the old categories (aina / oem / programs / mdf) are sorted by status (on hold / stalled = Not Live, anything in motion = Live)
+        legacyStage: it => /hold|stall|pause|not proceeding/i.test(it.status || "") ? "not-live" : "live",
         weekTag: "INTEL WEEKLY", weekIcon: "fa-solid fa-microchip",
         nameCol: "Activity", copyNameCol: "Activity",
         entity: "activity", entities: "activities",
