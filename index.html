@@ -1167,172 +1167,20 @@
       font-weight: 700;
     }
 
-    #intelView {
-      display: none;
-    }
-    #weeklyView {
-      display: block;
-    }
-    #intelView.active {
-      display: block;
-    }
-    #weeklyView.hidden {
-      display: none;
-    }
-
-    .intel-view-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-      flex-wrap: wrap;
-    }
-    .intel-view-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .intel-logo-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #1565c0;
-      color: #fff;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
-    }
-    .intel-view-subtitle {
-      font-size: 0.82rem;
+    /* Intel view reuses the Partnerships table; these are its small differences */
+    .cell-sub {
+      font-size: 0.74rem;
+      font-weight: 500;
       color: var(--text-muted);
       margin-top: 2px;
     }
+    .cell-sub:empty::before {
+      content: attr(data-placeholder);
+      color: #cbd5e1;
+    }
+    .view-intel .week-tag { background: #1565c0; }
+    .field-group.hidden { display: none; }
 
-    .intel-table-container {
-      overflow-x: auto;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .intel-tracker {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.84rem;
-      background: #ffffff;
-    }
-    .intel-tracker thead tr {
-      background: #1565c0;
-      color: #ffffff;
-    }
-    .intel-tracker th {
-      padding: 10px 14px;
-      font-weight: 700;
-      font-size: 0.78rem;
-      letter-spacing: 0.3px;
-      text-align: left;
-      white-space: nowrap;
-    }
-    .intel-tracker td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-      line-height: 1.5;
-    }
-    .intel-tracker tr:last-child td {
-      border-bottom: none;
-    }
-    .intel-tracker tbody tr:nth-child(even) {
-      background: #f8fafc;
-    }
-    .intel-tracker tbody tr:hover {
-      background: #f0f6ff;
-    }
-
-    .intel-col-activity { width: 22%; }
-    .intel-col-status   { width: 14%; }
-    .intel-col-update   { width: 36%; }
-    .intel-col-next     { width: 28%; }
-
-    .intel-activity-label {
-      font-weight: 700;
-      color: var(--text-main);
-      display: block;
-    }
-    .intel-activity-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-      display: block;
-    }
-
-    .intel-cell-editable {
-      min-height: 28px;
-      outline: none;
-      border-radius: 4px;
-      padding: 2px 4px;
-      transition: background 0.12s ease, box-shadow 0.12s ease;
-      cursor: text;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    .intel-cell-editable:focus {
-      background: #fffbeb;
-      box-shadow: 0 0 0 2px #fbbf24;
-    }
-
-    .intel-add-row-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 0.75rem;
-      background: #f0f6ff;
-      border: 1px dashed #93c5fd;
-      color: #1565c0;
-      font-size: 0.78rem;
-      font-weight: 600;
-      font-family: inherit;
-      padding: 7px 14px;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .intel-add-row-btn:hover {
-      background: #dbeafe;
-      border-color: #3b82f6;
-    }
-
-    .intel-status-badge {
-      display: inline-block;
-      font-size: 0.70rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-    .intel-status-active      { background: #dcfce7; color: #15803d; }
-    .intel-status-progress    { background: #e0f2fe; color: #0369a1; }
-    .intel-status-paused      { background: #fef3c7; color: #92400e; }
-    .intel-status-hold        { background: #f1f5f9; color: #64748b; }
-    .intel-status-signed      { background: #f3e8ff; color: #7e22ce; }
-
-    .intel-section-divider td {
-      background: #dbeafe;
-      padding: 6px 14px;
-      font-size: 0.70rem;
-      font-weight: 800;
-      color: #1d4ed8;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border);
-    }
-
-    @media (max-width: 768px) {
-      .intel-col-activity { width: 28%; }
-      .intel-col-status   { width: 18%; }
-    }
   </style>
 </head>
 <body>
@@ -1379,14 +1227,14 @@
     </div>
   </div>
 
-  <div id="weeklyView">
+  <div id="trackerView">
   <!-- Container -->
   <div class="container">
 
     <!-- WEEK / DATE CONTROLLER BAR -->
     <div class="week-control-bar">
       <div class="week-left">
-        <span class="week-tag"><i class="fa-regular fa-calendar-days"></i> WEEKLY UPDATE</span>
+        <span class="week-tag"><i class="fa-regular fa-calendar-days" id="weekTagIcon"></i> <span id="weekTagText">WEEKLY UPDATE</span></span>
         <select class="week-select" id="weekSelector" onchange="switchWeek(this.value)">
           <!-- Populated dynamically (e.g. 10 Sep 2026, 17 Sep 2026) -->
         </select>
@@ -1422,8 +1270,8 @@
             <div class="copy-menu-item" onclick="copyTableWithScope('all')">
               <i class="fa-solid fa-table-list"></i>
               <div>
-                <strong>Copy All Partnerships</strong>
-                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Full table across Ongoing, New, and Not Moving</div>
+                <strong><span id="copyAllLabel">Copy All Partnerships</span></strong>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;"><span id="copyAllDesc">Full table across Ongoing, New, and Not Moving</span></div>
               </div>
             </div>
           </div>
@@ -1434,19 +1282,9 @@
         </button>
       </div>
     </div>
+    <!-- TABS (rendered dynamically for the active view) -->
+    <div class="tabs-nav" role="tablist" id="tabsNav"><!-- Rendered per view (Partnerships / Intel) --></div>
 
-    <!-- 3 TABS (Ongoing, New, Not Moving Forward) -->
-    <div class="tabs-nav" role="tablist">
-      <button class="tab-item active" data-tab="ongoing">
-        Ongoing <span class="tab-badge" id="count-ongoing">0</span>
-      </button>
-      <button class="tab-item" data-tab="pitches">
-        New <span class="tab-badge" id="count-pitches">0</span>
-      </button>
-      <button class="tab-item" data-tab="not-moving">
-        Not Moving Forward <span class="tab-badge" id="count-not-moving">0</span>
-      </button>
-    </div>
 
     <!-- Edit Hint -->
     <div class="edit-hint-bar">
@@ -1472,7 +1310,7 @@
       <table class="tabular-tracker">
         <thead>
           <tr>
-            <th class="col-partner">Partner</th>
+            <th class="col-partner" id="thName">Partner</th>
             <th class="col-status">Status</th>
             <th class="col-update">Current Update</th>
             <th class="col-next">What's Next</th>
@@ -1486,188 +1324,7 @@
       </table>
     </div>
 
-  </div>
-  </div><!-- /weeklyView -->
-
-  <!-- ========================= INTEL VIEW ========================= -->
-  <div id="intelView" class="container">
-
-    <div class="intel-view-header">
-      <div class="intel-view-title">
-        <span class="intel-logo-badge"><i class="fa-solid fa-microchip"></i> Intel Partnership Tracker</span>
-        <div>
-          <div style="font-size: 1rem; font-weight: 700; color: var(--text-main);">Intel Activities — IL View</div>
-          <div class="intel-view-subtitle">All Intel-related activities across AINA App, OEM Partners, Programs & MDF</div>
-        </div>
-      </div>
-      <button class="intel-add-row-btn" onclick="intelAddRow()">
-        <i class="fa-solid fa-plus"></i> Add Row
-      </button>
-    </div>
-
-    <div class="intel-table-container">
-      <table class="intel-tracker">
-        <thead>
-          <tr>
-            <th class="intel-col-activity">Activity</th>
-            <th class="intel-col-status">Status</th>
-            <th class="intel-col-update">Current Update</th>
-            <th class="intel-col-next">Next Steps</th>
-          </tr>
-        </thead>
-        <tbody id="intelTableBody">
-          <!-- Section: AINA App -->
-          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-desktop"></i> &nbsp;AINA Windows App</td></tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">IL AINA Windows App</span>
-              <span class="intel-activity-sub">AI PC App — Hard Bundling</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">In Progress</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-1" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Windows app published and rolled out to 10% users. Build 1.5.6 is the latest production build. Microsoft Digital Signature for hard bundling to be completed. iGPU + NPU integration done, final tests in progress.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-1" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">Offline Build</span>
-              <span class="intel-activity-sub">IL AINA Offline on AI PC</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">WIP</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-2" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Being prioritised over WCL. Tech Team meeting on 11 May with a solution. Build link: storage.googleapis.com/aina-user-assets/intel_aina_assets/desktop/InfinityLearn-Setup-1.5.6.exe</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-2" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">Microsoft Store Listing</span>
-              <span class="intel-activity-sub">IL AI PC App on MS Store</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">WIP</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-3" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL Team to list build on Microsoft Store by 8th June, post which sharing exe won't be required.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-3" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">WCL Testing</span>
-              <span class="intel-activity-sub">AI PC Event — WCL &amp; PTL</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">In Progress</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-4" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">WCL Testing started, to be completed by 8th June. Tech team to share report. PTL testing done. PTL device shipped, demo ready and showcased at AI PC Innovation event.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="app-4" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <!-- Section: OEM Partners -->
-          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-laptop"></i> &nbsp;OEM Partners</td></tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">HP</span>
-              <span class="intel-activity-sub">Hard bundling — Tech &amp; Marketing</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">In Discussion</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-hp" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Tech Track: IL team to restart marketing thread after updated app is shared with HP. Build shared with HP senior management (Ipsita + leaders), demo conducted 23rd Apr. Marketing Track: Kanika Puri is now HP's Consumer Marketing SPOC (Vivek moved verticals). Awaiting slot from Kanika.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-hp" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">Samsung</span>
-              <span class="intel-activity-sub">Soft bundling — Offer + GTM</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">Legal Review</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-samsung" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Ranadip has sent updated agreement. Samsung legal team reviewing. Gives and gets finalised. IL shared calendar view of customer journey, engagement points, and self-learn course offering details. Approval happens only twice a month — targeting before 15th Aug or 30th Aug. Intel had escalated internally.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-samsung" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">Acer</span>
-              <span class="intel-activity-sub">Hard bundling — AI PC</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">In Discussion</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-acer" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL, Intel and Acer had a meeting 9th June. Acer asked app to be Windows/Microsoft compliant for re-negotiation on pricing. Hard bundling delayed by 10-15 mins. Sondhi Ji was travelling, Bala shared 3 laptops for testing (Intel-based 11.6", 14", Chromebook). Acer requested Linux build check. Sep: Infographics updated, marketing plan pending, Raja suggested campaign when BBD isn't happening.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-acer" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">Croma</span>
-              <span class="intel-activity-sub">Retail bundling</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-hold">On Hold</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-croma" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Croma is OOF. Meeting expected Thursday or early next week. On hold till tech is ready. Intel Team to reach out once Croma team is back. Raghu to update.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="oem-croma" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <!-- Section: Programs & Campaigns -->
-          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-handshake"></i> &nbsp;Programs &amp; Campaigns</td></tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">SFI — AI Course for Educators</span>
-              <span class="intel-activity-sub">Content licensing + Workshops</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-active">Active</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-sfi" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Mutually signed agreement confirmed. One-liner for commercialisation approved. Instructor training started (first session 7th May). 4 sessions conducted. 2nd workshop (13th Aug) for 80 teachers. LMS integration planned — SFI shared SCORM files. July: 74 teachers. August target: 100–200 teachers. Sep: Conducted session for 100 more teachers, planning another session for 300 more.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-sfi" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">IDR — Intel DevCloud</span>
-              <span class="intel-activity-sub">Content integration + Buildathon + School Labs</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">In Progress</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-idr" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL Team had a call with Saloni (Intel). Saloni approved use of Intel content &amp; branding for Reliance tie-up. Screenshots to be sent for record. Integrated with Amazon workshops. School workshop program picking up post summer vacation — targeting 50,000 students this year. Previous workshop images &amp; certificates shared. Sep: Planning proposal for buildathon and labs.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-idr" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">Reliance Digital (RD)</span>
-              <span class="intel-activity-sub">BTS Campaign — Intel + IL</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-active">Campaign Live</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-rd" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Campaign is LIVE. Promotions started from IL's end. Microsite, coupon codes and process doc shared with RIL. IL noticed PR releases without IL mention — raised with RIL. RIL informed it was a leadership call and cannot be changed. IL has mailed RIL, awaiting final response. Intel approval taken for AI Course. Sep: No update.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-rd" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">Amazon</span>
-              <span class="intel-activity-sub">AI Workshops + Olympiad Partnership</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-paused">Stalled</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-amazon" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">Amazon team unable to conduct AI workshops in partner schools due to internal reasons. IL has taken multiple follow-ups on WhatsApp — no response. Irfan said no budgets due to Prime Day. Sep: Called Irfan, no response. Infographic created. Amazon shared reference landing page, IL to build landing page and share. Not Proceeding on that track.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="prog-amazon" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-          <!-- Section: MDF -->
-          <tr class="intel-section-divider"><td colspan="4"><i class="fa-solid fa-coins"></i> &nbsp;MDF — Marketing Development Fund</td></tr>
-
-          <tr>
-            <td>
-              <span class="intel-activity-label">MDF Plan 2026</span>
-              <span class="intel-activity-sub">IL Marketing Activities</span>
-            </td>
-            <td><span class="intel-status-badge intel-status-progress">Awaiting Intel</span></td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="mdf-1" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)">IL Team has shared MDF plan with Intel Team. Intel to review and come back. Intel informed there's a shortage of budgets for this quarter. MDF submitted for Acer. Techspark MDF to be submitted. Sep: Anupama is discussing with Pankaj. Submitted MDF for Acer.</td>
-            <td class="intel-cell-editable" contenteditable="true" data-intel-id="mdf-1" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-          </tr>
-
-        </tbody>
-      </table>
-    </div>
-
-    <button class="intel-add-row-btn" onclick="intelAddRow()" style="margin-top: 0.85rem;">
-      <i class="fa-solid fa-plus"></i> Add Row
-    </button>
-
-  </div>
-  <!-- /intelView -->
+    </div><!-- /trackerView -->
 
   <!-- Toast Notification -->
   <div class="toast-notify" id="toastNotify">
@@ -1679,21 +1336,21 @@
   <div class="modal-overlay" id="addModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Add Partnership</h3>
+        <h3 id="modalTitle">Add Partnership</h3>
         <button class="modal-close" id="btnCloseModal">&times;</button>
       </div>
       <div class="modal-body">
         <div class="field-group">
-          <label for="modalPartner">Partner Name *</label>
+          <label for="modalPartner" id="modalNameLabel">Partner Name *</label>
           <input type="text" id="modalPartner" class="field-input" placeholder="e.g. Acer, Pearson" required />
+        </div>
+        <div class="field-group hidden" id="modalSubGroup">
+          <label for="modalSub">Sub-label</label>
+          <input type="text" id="modalSub" class="field-input" placeholder="e.g. Hard bundling, Q4 initiative" />
         </div>
         <div class="field-group">
           <label for="modalTab">Tab *</label>
-          <select id="modalTab" class="field-select">
-            <option value="ongoing">Ongoing</option>
-            <option value="pitches">New</option>
-            <option value="not-moving">Not Moving Forward</option>
-          </select>
+          <select id="modalTab" class="field-select"></select>
         </div>
         <div class="field-group">
           <label for="modalStatus">Status</label>
@@ -1990,9 +1647,117 @@
     ];
 
     // =========================================================================
+    // INTEL DATASET — same row shape as DEFAULT_DATA; `stage` is the Intel tab
+    // (aina / oem / programs / mdf) and `sub` is the small line under the name.
+    // =========================================================================
+    const DEFAULT_INTEL_DATA = [
+      // AINA Windows App
+      { id: "app-1", stage: "aina", partner: "IL AINA Windows App", sub: "AI PC App — Hard Bundling", status: "In Progress",
+        update: "Windows app published and rolled out to 10% users. Build 1.5.6 is the latest production build. Microsoft Digital Signature for hard bundling to be completed. iGPU + NPU integration done, final tests in progress.",
+        next: "", comments: [] },
+      { id: "app-2", stage: "aina", partner: "Offline Build", sub: "IL AINA Offline on AI PC", status: "WIP",
+        update: "Being prioritised over WCL. Tech Team meeting on 11 May with a solution. Build link: storage.googleapis.com/aina-user-assets/intel_aina_assets/desktop/InfinityLearn-Setup-1.5.6.exe",
+        next: "", comments: [] },
+      { id: "app-3", stage: "aina", partner: "Microsoft Store Listing", sub: "IL AI PC App on MS Store", status: "WIP",
+        update: "IL Team to list build on Microsoft Store by 8th June, post which sharing exe won't be required.",
+        next: "", comments: [] },
+      { id: "app-4", stage: "aina", partner: "WCL Testing", sub: "AI PC Event — WCL & PTL", status: "In Progress",
+        update: "WCL Testing started, to be completed by 8th June. Tech team to share report. PTL testing done. PTL device shipped, demo ready and showcased at AI PC Innovation event.",
+        next: "", comments: [] },
+      // OEM Partners
+      { id: "oem-hp", stage: "oem", partner: "HP", sub: "Hard bundling — Tech & Marketing", status: "In Discussion",
+        update: "Tech Track: IL team to restart marketing thread after updated app is shared with HP. Build shared with HP senior management (Ipsita + leaders), demo conducted 23rd Apr. Marketing Track: Kanika Puri is now HP's Consumer Marketing SPOC (Vivek moved verticals). Awaiting slot from Kanika.",
+        next: "", comments: [] },
+      { id: "oem-samsung", stage: "oem", partner: "Samsung", sub: "Soft bundling — Offer + GTM", status: "Legal Review",
+        update: "Ranadip has sent updated agreement. Samsung legal team reviewing. Gives and gets finalised. IL shared calendar view of customer journey, engagement points, and self-learn course offering details. Approval happens only twice a month — targeting before 15th Aug or 30th Aug. Intel had escalated internally.",
+        next: "", comments: [] },
+      { id: "oem-acer", stage: "oem", partner: "Acer", sub: "Hard bundling — AI PC", status: "In Discussion",
+        update: "IL, Intel and Acer had a meeting 9th June. Acer asked app to be Windows/Microsoft compliant for re-negotiation on pricing. Hard bundling delayed by 10-15 mins. Sondhi Ji was travelling, Bala shared 3 laptops for testing (Intel-based 11.6\", 14\", Chromebook). Acer requested Linux build check. Sep: Infographics updated, marketing plan pending, Raja suggested campaign when BBD isn't happening.",
+        next: "", comments: [] },
+      { id: "oem-croma", stage: "oem", partner: "Croma", sub: "Retail bundling", status: "On Hold",
+        update: "Croma is OOF. Meeting expected Thursday or early next week. On hold till tech is ready. Intel Team to reach out once Croma team is back. Raghu to update.",
+        next: "", comments: [] },
+      // Programs & Campaigns
+      { id: "prog-sfi", stage: "programs", partner: "SFI — AI Course for Educators", sub: "Content licensing + Workshops", status: "Active",
+        update: "Mutually signed agreement confirmed. One-liner for commercialisation approved. Instructor training started (first session 7th May). 4 sessions conducted. 2nd workshop (13th Aug) for 80 teachers. LMS integration planned — SFI shared SCORM files. July: 74 teachers. August target: 100–200 teachers. Sep: Conducted session for 100 more teachers, planning another session for 300 more.",
+        next: "", comments: [] },
+      { id: "prog-idr", stage: "programs", partner: "IDR — Intel DevCloud", sub: "Content integration + Buildathon + School Labs", status: "In Progress",
+        update: "IL Team had a call with Saloni (Intel). Saloni approved use of Intel content & branding for Reliance tie-up. Screenshots to be sent for record. Integrated with Amazon workshops. School workshop program picking up post summer vacation — targeting 50,000 students this year. Previous workshop images & certificates shared. Sep: Planning proposal for buildathon and labs.",
+        next: "", comments: [] },
+      { id: "prog-rd", stage: "programs", partner: "Reliance Digital (RD)", sub: "BTS Campaign — Intel + IL", status: "Campaign Live",
+        update: "Campaign is LIVE. Promotions started from IL's end. Microsite, coupon codes and process doc shared with RIL. IL noticed PR releases without IL mention — raised with RIL. RIL informed it was a leadership call and cannot be changed. IL has mailed RIL, awaiting final response. Intel approval taken for AI Course. Sep: No update.",
+        next: "", comments: [] },
+      { id: "prog-amazon", stage: "programs", partner: "Amazon", sub: "AI Workshops + Olympiad Partnership", status: "Stalled",
+        update: "Amazon team unable to conduct AI workshops in partner schools due to internal reasons. IL has taken multiple follow-ups on WhatsApp — no response. Irfan said no budgets due to Prime Day. Sep: Called Irfan, no response. Infographic created. Amazon shared reference landing page, IL to build landing page and share. Not Proceeding on that track.",
+        next: "", comments: [] },
+      // MDF
+      { id: "mdf-1", stage: "mdf", partner: "MDF Plan 2026", sub: "IL Marketing Activities", status: "Awaiting Intel",
+        update: "IL Team has shared MDF plan with Intel Team. Intel to review and come back. Intel informed there's a shortage of budgets for this quarter. MDF submitted for Acer. Techspark MDF to be submitted. Sep: Anupama is discussing with Pankaj. Submitted MDF for Acer.",
+        next: "", comments: [] }
+    ];
+
+    // =========================================================================
+    // VIEWS — the Partnerships and Intel trackers share one screen and one set
+    // of handlers; everything that differs lives in this config.
+    // =========================================================================
+    const VIEW_CONFIG = {
+      weekly: {
+        storageKey: "il_partnership_weekly_archive_v1",
+        cloudPath: "il_partnerships_tracker",
+        tabs: [
+          { key: "ongoing", label: "Ongoing" },
+          { key: "pitches", label: "New" },
+          { key: "not-moving", label: "Not Moving Forward" }
+        ],
+        weekTag: "WEEKLY UPDATE", weekIcon: "fa-regular fa-calendar-days",
+        nameCol: "Partner", copyNameCol: "Brand",
+        entity: "partnership", entities: "partnerships",
+        addTitle: "Add Partnership", nameLabel: "Partner Name *", namePlaceholder: "e.g. Acer, Pearson",
+        searchPlaceholder: "Search partner, update, or next steps (e.g., 'Acer', 'Pearson')...",
+        hasSub: false,
+        defaultWeek: { key: "10-Sep-2026", label: "Week of: 10 September 2026", createdAt: "2026-09-10T00:00:00.000Z" },
+        defaultData: () => DEFAULT_DATA
+      },
+      intel: {
+        storageKey: "il_intel_weekly_archive_v2",
+        cloudPath: "il_intel_tracker",
+        tabs: [
+          { key: "aina", label: "AINA App" },
+          { key: "oem", label: "OEM Partners" },
+          { key: "programs", label: "Programs & Campaigns" },
+          { key: "mdf", label: "MDF" }
+        ],
+        weekTag: "INTEL WEEKLY", weekIcon: "fa-solid fa-microchip",
+        nameCol: "Activity", copyNameCol: "Activity",
+        entity: "activity", entities: "activities",
+        addTitle: "Add Intel Activity", nameLabel: "Activity Name *", namePlaceholder: "e.g. New Workshop, Lenovo",
+        searchPlaceholder: "Search activity, update, or next steps (e.g., 'HP', 'MDF')...",
+        hasSub: true,
+        defaultWeek: { key: "29-Sep-2026", label: "Week of: 29 September 2026", createdAt: "2026-09-29T00:00:00.000Z" },
+        defaultData: () => DEFAULT_INTEL_DATA
+      }
+    };
+
+    function makeViewState(key) {
+      const cfg = VIEW_CONFIG[key];
+      return {
+        key, cfg,
+        weeksData: {},
+        currentWeekKey: cfg.defaultWeek.key,
+        userManuallySelectedWeek: false,
+        lastKnownLatestWeek: null,
+        currentTab: cfg.tabs[0].key,
+        filterOnlyUpdated: false,
+        cloudRef: null
+      };
+    }
+
+    const views = { weekly: makeViewState("weekly"), intel: makeViewState("intel") };
+    let S = views.weekly; // state of the view currently on screen
+
+    // =========================================================================
     // STATE: WEEKS MANAGEMENT (WEEK-OVER-WEEK ARCHIVE)
     // =========================================================================
-    const WEEKS_STORAGE_KEY = "il_partnership_weekly_archive_v1";
     const FIREBASE_CONFIG_STORAGE_KEY = "il_partnership_firebase_config_v1";
 
     // Bake your Firebase config here to automatically connect everyone who opens this site:
@@ -2007,11 +1772,6 @@
       measurementId: "G-80H3YL1NQX"
     };
 
-    let weeksData = {};
-    let currentWeekKey = "10-Sep-2026";
-    let userManuallySelectedWeek = false;
-    let lastKnownLatestWeek = null;
-    let currentTab = "ongoing";
     let searchQuery = "";
 
     function parseWeekDate(key, weekObj) {
@@ -2075,7 +1835,6 @@
     }
 
     let firebaseDb = null;
-    let cloudRef = null;
     let cloudStatus = "local"; // 'local' | 'connecting' | 'connected' | 'syncing' | 'error'
 
     function updateCloudStatus(status, customMsg) {
@@ -2113,6 +1872,8 @@
       }
     }
 
+    // Connects every view to its own Firebase path. A view's listener updates that
+    // view's state; the screen only re-renders when it is the view being shown.
     function initFirebaseSync() {
       let config = EMBEDDED_FIREBASE_CONFIG;
       if (!config) {
@@ -2139,7 +1900,6 @@
           firebase.initializeApp(config);
         }
         firebaseDb = firebase.database();
-        cloudRef = firebaseDb.ref("il_partnerships_tracker");
 
         // Listen for online status
         firebaseDb.ref(".info/connected").on("value", snap => {
@@ -2150,48 +1910,7 @@
           }
         });
 
-        // Realtime data sync listener
-        cloudRef.on("value", snapshot => {
-          const val = snapshot.val();
-          if (val && val.weeks && Object.keys(val.weeks).length > 0) {
-            const activeEl = document.activeElement;
-            const isEditing = activeEl && (activeEl.isContentEditable || activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.tagName === "SELECT");
-
-            weeksData = val.weeks;
-            if (weeksData["17-September-2026"]) {
-              delete weeksData["17-September-2026"];
-            }
-            localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(weeksData));
-
-            // Default to latest week:
-            // 1. On fresh page open / reload
-            // 2. Whenever next week's update is added (latestKey changes)
-            // 3. Unless the user actively switched to an older week during this current session
-            const latestKey = getLatestWeekKey(weeksData);
-            if (!lastKnownLatestWeek || latestKey !== lastKnownLatestWeek || !userManuallySelectedWeek || !weeksData[currentWeekKey]) {
-              currentWeekKey = latestKey;
-              lastKnownLatestWeek = latestKey;
-              userManuallySelectedWeek = false;
-            }
-
-            updateCounts();
-
-            if (!isEditing) {
-              populateWeekSelector();
-              renderTable();
-            }
-          } else {
-            // Cloud DB is empty, initialize cloud with baseline weeksData!
-            cloudRef.set({
-              weeks: weeksData,
-              lastUpdated: new Date().toISOString()
-            });
-          }
-        }, err => {
-          console.error("Firebase value listener error:", err);
-          updateCloudStatus("error", err.message);
-        });
-
+        Object.values(views).forEach(attachViewSync);
         return true;
       } catch (err) {
         console.error("Firebase init failed:", err);
@@ -2200,46 +1919,111 @@
       }
     }
 
-    function loadWeeks() {
-      const saved = localStorage.getItem(WEEKS_STORAGE_KEY);
+    function attachViewSync(st) {
+      if (st.cloudRef) st.cloudRef.off();
+      st.cloudRef = firebaseDb.ref(st.cfg.cloudPath);
+
+      // Realtime data sync listener
+      st.cloudRef.on("value", snapshot => {
+        const val = snapshot.val();
+        if (val && val.weeks && Object.keys(val.weeks).length > 0) {
+          const activeEl = document.activeElement;
+          const isEditing = activeEl && (activeEl.isContentEditable || activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.tagName === "SELECT");
+
+          st.weeksData = val.weeks;
+          if (st.key === "weekly" && st.weeksData["17-September-2026"]) {
+            delete st.weeksData["17-September-2026"];
+          }
+          localStorage.setItem(st.cfg.storageKey, JSON.stringify(st.weeksData));
+
+          // Default to latest week:
+          // 1. On fresh page open / reload
+          // 2. Whenever next week's update is added (latestKey changes)
+          // 3. Unless the user actively switched to an older week during this current session
+          const latestKey = getLatestWeekKey(st.weeksData);
+          if (!st.lastKnownLatestWeek || latestKey !== st.lastKnownLatestWeek || !st.userManuallySelectedWeek || !st.weeksData[st.currentWeekKey]) {
+            st.currentWeekKey = latestKey;
+            st.lastKnownLatestWeek = latestKey;
+            st.userManuallySelectedWeek = false;
+          }
+
+          if (st === S) {
+            updateCounts();
+            if (!isEditing) {
+              populateWeekSelector();
+              renderTable();
+            }
+          }
+        } else {
+          // Cloud DB is empty, initialize cloud with baseline weeksData!
+          st.cloudRef.set({
+            weeks: st.weeksData,
+            lastUpdated: new Date().toISOString()
+          });
+        }
+      }, err => {
+        console.error("Firebase value listener error (" + st.key + "):", err);
+        updateCloudStatus("error", err.message);
+      });
+    }
+
+    function loadWeeks(st) {
+      const cfg = st.cfg;
+      const saved = localStorage.getItem(cfg.storageKey);
       if (saved) {
         try {
-          weeksData = JSON.parse(saved);
+          st.weeksData = JSON.parse(saved);
         } catch (e) {
-          weeksData = {};
+          st.weeksData = {};
         }
       }
 
-      // Remove any unwanted test weeks
-      if (weeksData["17-September-2026"]) {
-        delete weeksData["17-September-2026"];
+      if (st.key === "weekly") {
+        // Remove any unwanted test weeks
+        if (st.weeksData["17-September-2026"]) {
+          delete st.weeksData["17-September-2026"];
+        }
       }
 
       // Initialize default week
-      if (!weeksData["10-Sep-2026"] || !weeksData["10-Sep-2026"].items) {
-        weeksData["10-Sep-2026"] = {
-          label: "Week of: 10 September 2026",
-          createdAt: "2026-09-10T00:00:00.000Z",
-          items: JSON.parse(JSON.stringify(DEFAULT_DATA))
-        };
-      } else {
-        weeksData["10-Sep-2026"].label = "Week of: 10 September 2026";
+      const dw = cfg.defaultWeek;
+      if (!st.weeksData[dw.key] || !st.weeksData[dw.key].items) {
+        const items = JSON.parse(JSON.stringify(cfg.defaultData()));
+        if (st.key === "intel") applyLegacyIntelEdits(items);
+        st.weeksData[dw.key] = { label: dw.label, createdAt: dw.createdAt, items };
+      } else if (st.key === "weekly") {
+        st.weeksData[dw.key].label = dw.label;
       }
-      localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(weeksData));
+      localStorage.setItem(cfg.storageKey, JSON.stringify(st.weeksData));
 
-      currentWeekKey = getLatestWeekKey(weeksData);
-      lastKnownLatestWeek = currentWeekKey;
-      userManuallySelectedWeek = false;
-      populateWeekSelector();
+      st.currentWeekKey = getLatestWeekKey(st.weeksData);
+      st.lastKnownLatestWeek = st.currentWeekKey;
+      st.userManuallySelectedWeek = false;
+    }
+
+    // The first Intel tab saved cell edits per browser (not weekly, not in the cloud).
+    // Carry any such edits into the first weekly copy so nothing typed there is lost.
+    function applyLegacyIntelEdits(items) {
+      try {
+        const raw = localStorage.getItem("il_intel_view_data_v1");
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        items.forEach(it => {
+          const edits = saved[it.id];
+          if (!edits) return;
+          if (typeof edits.update === "string") it.update = edits.update;
+          if (typeof edits.next === "string") it.next = edits.next;
+        });
+      } catch (e) {}
     }
 
     function saveWeeks() {
-      localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(weeksData));
+      localStorage.setItem(S.cfg.storageKey, JSON.stringify(S.weeksData));
       updateCounts();
 
-      if (cloudRef && (cloudStatus === "connected" || cloudStatus === "syncing")) {
+      if (S.cloudRef && (cloudStatus === "connected" || cloudStatus === "syncing")) {
         updateCloudStatus("syncing");
-        cloudRef.child("weeks").set(weeksData)
+        S.cloudRef.child("weeks").set(S.weeksData)
           .then(() => {
             updateCloudStatus("connected");
           })
@@ -2254,33 +2038,32 @@
       const select = document.getElementById("weekSelector");
       if (!select) return;
       select.innerHTML = "";
-      const sortedKeys = getSortedWeekKeys(weeksData);
+      const sortedKeys = getSortedWeekKeys(S.weeksData);
       sortedKeys.forEach(key => {
         const opt = document.createElement("option");
         opt.value = key;
-        opt.textContent = weeksData[key].label;
-        if (key === currentWeekKey) opt.selected = true;
+        opt.textContent = S.weeksData[key].label;
+        if (key === S.currentWeekKey) opt.selected = true;
         select.appendChild(opt);
       });
-      select.value = currentWeekKey;
+      select.value = S.currentWeekKey;
     }
 
     window.switchWeek = function(weekKey) {
-      userManuallySelectedWeek = true;
-      currentWeekKey = weekKey;
+      S.userManuallySelectedWeek = true;
+      S.currentWeekKey = weekKey;
       updateCounts();
       renderTable();
-      showToast(`Switched to ${weeksData[weekKey] ? weeksData[weekKey].label : weekKey}`);
+      showToast(`Switched to ${S.weeksData[weekKey] ? S.weeksData[weekKey].label : weekKey}`);
     };
 
-    let filterOnlyUpdated = false;
 
     window.toggleOnlyUpdatedFilter = function() {
-      filterOnlyUpdated = !filterOnlyUpdated;
+      S.filterOnlyUpdated = !S.filterOnlyUpdated;
       const btn = document.getElementById("btnFilterUpdated");
-      if (btn) btn.classList.toggle("active", filterOnlyUpdated);
+      if (btn) btn.classList.toggle("active", S.filterOnlyUpdated);
       renderTable();
-      showToast(filterOnlyUpdated ? "Showing only updated partnerships" : "Showing all partnerships");
+      showToast(S.filterOnlyUpdated ? `Showing only updated ${S.cfg.entities}` : `Showing all ${S.cfg.entities}`);
     };
 
     window.toggleUpdated = function(id, event) {
@@ -2307,8 +2090,9 @@
       if (!userDate) return;
 
       const newKey = userDate.replace(/\s+/g, '-');
+      if (S.weeksData[newKey] && !confirm(`"${S.weeksData[newKey].label}" already exists. Replace it with a fresh copy of the current week? Its edits will be lost.`)) return;
       // Clone current week's items so nothing is lost
-      const currentItems = weeksData[currentWeekKey] ? weeksData[currentWeekKey].items : DEFAULT_DATA;
+      const currentItems = S.weeksData[S.currentWeekKey] ? S.weeksData[S.currentWeekKey].items : S.cfg.defaultData();
       const clonedItems = JSON.parse(JSON.stringify(currentItems));
 
       // In the new week, reset updatedThisWeek to false so only new edits are highlighted
@@ -2316,15 +2100,15 @@
         it.updatedThisWeek = false;
       });
 
-      weeksData[newKey] = {
+      S.weeksData[newKey] = {
         label: `Week of: ${userDate}`,
         createdAt: new Date().toISOString(),
         items: clonedItems
       };
 
-      currentWeekKey = newKey;
-      lastKnownLatestWeek = newKey;
-      userManuallySelectedWeek = false;
+      S.currentWeekKey = newKey;
+      S.lastKnownLatestWeek = newKey;
+      S.userManuallySelectedWeek = false;
       saveWeeks();
       populateWeekSelector();
       renderTable();
@@ -2332,10 +2116,10 @@
     });
 
     function getActiveItems() {
-      if (!weeksData[currentWeekKey]) {
-        return DEFAULT_DATA;
+      if (!S.weeksData[S.currentWeekKey]) {
+        return S.cfg.defaultData();
       }
-      return weeksData[currentWeekKey].items;
+      return S.weeksData[S.currentWeekKey].items;
     }
 
     function showToast(msg) {
@@ -2347,19 +2131,67 @@
     }
 
     function updateCounts() {
-      const counts = { ongoing: 0, pitches: 0, "not-moving": 0 };
+      const counts = {};
+      S.cfg.tabs.forEach(t => { counts[t.key] = 0; });
       let updatedTotal = 0;
       const items = getActiveItems();
       items.forEach(it => {
         if (counts[it.stage] !== undefined) counts[it.stage]++;
         if (it.updatedThisWeek) updatedTotal++;
       });
-      document.getElementById("count-ongoing").textContent = counts.ongoing;
-      document.getElementById("count-pitches").textContent = counts.pitches;
-      document.getElementById("count-not-moving").textContent = counts["not-moving"];
+      S.cfg.tabs.forEach(t => {
+        const badge = document.getElementById(`count-${t.key}`);
+        if (badge) badge.textContent = counts[t.key];
+      });
       const updatedTotalEl = document.getElementById("count-updated-total");
       if (updatedTotalEl) updatedTotalEl.textContent = updatedTotal;
     }
+
+    function getTabName(stage) {
+      const tab = S.cfg.tabs.find(t => t.key === stage);
+      return tab ? tab.label : stage;
+    }
+
+    function renderTabs() {
+      const nav = document.getElementById("tabsNav");
+      nav.innerHTML = S.cfg.tabs.map(t => `
+        <button class="tab-item ${t.key === S.currentTab ? "active" : ""}" data-tab="${t.key}">
+          ${escapeHtml(t.label)} <span class="tab-badge" id="count-${t.key}">0</span>
+        </button>`).join("");
+    }
+
+    // Re-labels everything on the shared screen for the active view (Partnerships / Intel).
+    function applyViewChrome() {
+      const cfg = S.cfg;
+      document.getElementById("trackerView").classList.toggle("view-intel", S.key === "intel");
+      document.getElementById("weekTagText").textContent = cfg.weekTag;
+      document.getElementById("weekTagIcon").className = cfg.weekIcon;
+      document.getElementById("thName").textContent = cfg.nameCol;
+      document.getElementById("searchInput").placeholder = cfg.searchPlaceholder;
+      document.getElementById("copyScopeTabName").textContent = getTabName(S.currentTab);
+      document.getElementById("copyAllLabel").textContent = `Copy All ${S.key === "intel" ? "Intel Activities" : "Partnerships"}`;
+      document.getElementById("copyAllDesc").textContent = `Full table across ${cfg.tabs.map(t => t.label).join(", ")}`;
+      document.getElementById("btnFilterUpdated").classList.toggle("active", S.filterOnlyUpdated);
+      renderTabs();
+      populateWeekSelector();
+      updateCounts();
+    }
+
+    window.switchView = function(view) {
+      if (!views[view] || views[view] === S) return;
+      S = views[view];
+      // Search text belongs to the view it was typed in
+      searchQuery = "";
+      const si = document.getElementById("searchInput");
+      si.value = "";
+      document.getElementById("searchClearBtn").style.display = "none";
+      document.getElementById("btnViewWeekly").classList.toggle("active", view === "weekly");
+      document.getElementById("btnViewIntel").classList.toggle("active", view === "intel");
+      try { history.replaceState(null, "", view === "intel" ? "#intel" : location.pathname + location.search); } catch (e) {}
+      hideToolbar();
+      applyViewChrome();
+      renderTable();
+    };
 
     function escapeHtml(str) {
       if (!str) return "";
@@ -2446,8 +2278,8 @@
     function getStatusBadgeClass(status) {
       if (!status) return "status-paused";
       const s = status.toLowerCase();
-      if (s.includes("active") || s.includes("signed")) return "status-active";
-      if (s.includes("progress") || s.includes("discussion") || s.includes("shared") || s.includes("planning") || s.includes("review") || s.includes("outreach")) return "status-progress";
+      if (s.includes("active") || s.includes("signed") || s.includes("live")) return "status-active";
+      if (s.includes("progress") || s.includes("discussion") || s.includes("shared") || s.includes("planning") || s.includes("review") || s.includes("outreach") || s.includes("wip") || s.includes("awaiting")) return "status-progress";
       return "status-paused";
     }
 
@@ -2781,6 +2613,7 @@
       let filtered = items.filter(it => {
         const matchesQuery = !q ||
           it.partner.toLowerCase().includes(q) ||
+          (it.sub && it.sub.toLowerCase().includes(q)) ||
           (it.status && it.status.toLowerCase().includes(q)) ||
           it.update.toLowerCase().includes(q) ||
           it.next.toLowerCase().includes(q) ||
@@ -2788,7 +2621,7 @@
 
         if (matchesQuery && q) matchCount++;
 
-        const matchesTab = q ? true : (it.stage === currentTab);
+        const matchesTab = q ? true : (it.stage === S.currentTab);
         return matchesQuery && matchesTab;
       });
 
@@ -2801,7 +2634,7 @@
         searchNotice.style.display = "none";
       }
 
-      if (filterOnlyUpdated) {
+      if (S.filterOnlyUpdated) {
         filtered = filtered.filter(it => it.updatedThisWeek);
       }
 
@@ -2815,7 +2648,7 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr class="empty-row">
-            <td colspan="6">${filterOnlyUpdated ? 'No partnerships marked as updated this week in this tab.' : 'No partnerships found in this tab.'}</td>
+            <td colspan="6">${S.filterOnlyUpdated ? `No ${S.cfg.entities} marked as updated this week in this tab.` : `No ${S.cfg.entities} found in this tab.`}</td>
           </tr>
         `;
         return;
@@ -2827,7 +2660,7 @@
 
       filtered.forEach(it => {
         // Section divider between updated and unchanged deals
-        if (!filterOnlyUpdated && !q && hasUpdated && hasUnchanged && !it.updatedThisWeek && !dividerInserted) {
+        if (!S.filterOnlyUpdated && !q && hasUpdated && hasUnchanged && !it.updatedThisWeek && !dividerInserted) {
           dividerInserted = true;
           const divTr = document.createElement("tr");
           divTr.className = "section-divider-row";
@@ -2864,11 +2697,12 @@
         tr.innerHTML = `
           <td class="col-partner">
             <div class="editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="partner" onfocus="handleCellFocus(this, '${it.id}', 'partner')" onblur="handleCellBlur(this, '${it.id}', 'partner')" onkeydown="handleCellKeydown(event, this)" title="Click to edit">${renderFormattedCellContent(it.partner, q)}</div>
-            ${it.updatedThisWeek 
+            ${S.cfg.hasSub ? `<div class="editable-cell cell-sub" contenteditable="true" spellcheck="false" data-placeholder="Add sub-label" data-id="${it.id}" data-field="sub" onfocus="handleCellFocus(this, '${it.id}', 'sub')" onblur="handleCellBlur(this, '${it.id}', 'sub')" onkeydown="handleCellKeydown(event, this)" title="Click to edit sub-label">${renderFormattedCellContent(it.sub, q)}</div>` : ''}
+            ${it.updatedThisWeek
               ? `<div class="badge-updated" onclick="toggleUpdated('${it.id}', event)" title="Click to remove update badge"><i class="fa-solid fa-bolt"></i> UPDATED</div>` 
               : `<button class="btn-mark-update" onclick="toggleUpdated('${it.id}', event)" title="Click to highlight as updated this week">+ Mark Updated</button>`
             }
-            ${q && it.stage !== currentTab ? `<div style="font-size: 0.68rem; color: #64748b; font-weight: normal; margin-top: 3px;">[${getTabName(it.stage)}]</div>` : ''}
+            ${q && it.stage !== S.currentTab ? `<div style="font-size: 0.68rem; color: #64748b; font-weight: normal; margin-top: 3px;">[${getTabName(it.stage)}]</div>` : ''}
           </td>
           <td class="col-status">
             <span class="status-badge ${badgeClass} editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="status" onfocus="handleCellFocus(this, '${it.id}', 'status')" onblur="handleCellBlur(this, '${it.id}', 'status')" onkeydown="handleCellKeydown(event, this)" title="Click to edit status">${renderFormattedCellContent(it.status || 'Active', q)}</span>
@@ -2877,9 +2711,7 @@
           <td class="col-next"><div class="editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="next" onfocus="handleCellFocus(this, '${it.id}', 'next')" onblur="handleCellBlur(this, '${it.id}', 'next')" onkeydown="handleCellKeydown(event, this)" title="Click to edit">${renderFormattedCellContent(it.next, q)}</div></td>
           <td class="col-move">
             <select class="stage-select" onchange="moveStage('${it.id}', this.value)">
-              <option value="ongoing" ${it.stage === 'ongoing' ? 'selected' : ''}>Ongoing</option>
-              <option value="pitches" ${it.stage === 'pitches' ? 'selected' : ''}>New</option>
-              <option value="not-moving" ${it.stage === 'not-moving' ? 'selected' : ''}>Not Moving Forward</option>
+              ${S.cfg.tabs.map(t => `<option value="${t.key}" ${it.stage === t.key ? 'selected' : ''}>${escapeHtml(t.label)}</option>`).join("")}
             </select>
           </td>
           <td class="col-comments">
@@ -2909,14 +2741,6 @@
       });
     }
 
-    function getTabName(stage) {
-      switch(stage) {
-        case 'ongoing': return 'Ongoing';
-        case 'pitches': return 'New';
-        case 'not-moving': return 'Not Moving Forward';
-        default: return stage;
-      }
-    }
 
     /* ============================================================
        COPY TABLE FUNCTIONALITY (Brand, Status, Current Update, Next Steps)
@@ -2996,10 +2820,10 @@
     function getStatusBadgeStyle(status) {
       if (!status) return 'background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;';
       const s = status.toLowerCase();
-      if (s.includes("active") || s.includes("signed")) {
+      if (s.includes("active") || s.includes("signed") || s.includes("live")) {
         return 'background:#dcfce7;color:#15803d;border:1px solid #86efac;';
       }
-      if (s.includes("progress") || s.includes("discussion") || s.includes("shared") || s.includes("planning") || s.includes("review") || s.includes("outreach")) {
+      if (s.includes("progress") || s.includes("discussion") || s.includes("shared") || s.includes("planning") || s.includes("review") || s.includes("outreach") || s.includes("wip") || s.includes("awaiting")) {
         return 'background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;';
       }
       return 'background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;';
@@ -3010,7 +2834,7 @@
       let html = `<table style="border-collapse:collapse;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;color:#1e293b;width:100%;border:1px solid #cbd5e1;line-height:1.5;">\n`;
       html += `  <thead>\n`;
       html += `    <tr style="background-color:#244c59;color:#ffffff;text-align:left;">\n`;
-      html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:22%;">Brand</th>\n`;
+      html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:22%;">${S.cfg.copyNameCol}</th>\n`;
       html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:16%;">Status</th>\n`;
       html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:34%;">Current Update</th>\n`;
       html += `      <th style="padding:10px 12px;border:1px solid #1c3c47;font-weight:700;width:28%;">Next Steps</th>\n`;
@@ -3019,7 +2843,7 @@
       html += `  <tbody>\n`;
 
       // 2. Generate TSV (perfect for Google Sheets & Excel)
-      let tsv = `Brand\tStatus\tCurrent Update\tNext Steps\r\n`;
+      let tsv = `${S.cfg.copyNameCol}\tStatus\tCurrent Update\tNext Steps\r\n`;
 
       items.forEach((it, idx) => {
         const bg = idx % 2 === 0 ? '#ffffff' : '#f8fafc';
@@ -3028,6 +2852,9 @@
         html += `    <tr style="background-color:${bg};">\n`;
         html += `      <td style="padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top;font-weight:600;">\n`;
         html += `        ${escapeHtmlForCopy(it.partner)}\n`;
+        if (it.sub) {
+          html += `        <div style="font-size:11px;font-weight:400;color:#64748b;">${escapeHtmlForCopy(it.sub)}</div>\n`;
+        }
         if (it.updatedThisWeek) {
           html += `        <span style="display:inline-block;margin-left:6px;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;">UPDATED</span>\n`;
         }
@@ -3039,7 +2866,7 @@
         html += `      <td style="padding:10px 12px;border:1px solid #e2e8f0;vertical-align:top;">${formatCellHtmlForCopy(it.next)}</td>\n`;
         html += `    </tr>\n`;
 
-        tsv += `${tsvEscape(it.partner)}\t${tsvEscape(it.status || 'Active')}\t${tsvEscape(it.update || '-')}\t${tsvEscape(it.next || '-')}\r\n`;
+        tsv += `${tsvEscape(it.sub ? it.partner + " — " + it.sub : it.partner)}\t${tsvEscape(it.status || 'Active')}\t${tsvEscape(it.update || '-')}\t${tsvEscape(it.next || '-')}\r\n`;
       });
 
       html += `  </tbody>\n`;
@@ -3080,7 +2907,7 @@
         const btnText = document.getElementById("copyBtnText");
         if (btn) btn.classList.add("copied");
         if (btnText) btnText.textContent = "Copied!";
-        showToast(`✓ Copied ${count} partnerships (${scopeDesc}) to clipboard`);
+        showToast(`✓ Copied ${count} ${S.cfg.entities} (${scopeDesc}) to clipboard`);
         setTimeout(() => {
           if (btn) btn.classList.remove("copied");
           if (btnText) btnText.textContent = "Copy Table";
@@ -3105,10 +2932,10 @@
           (it.next && it.next.toLowerCase().includes(q))
         );
       } else {
-        list = list.filter(it => it.stage === currentTab);
+        list = list.filter(it => it.stage === S.currentTab);
       }
 
-      if (filterOnlyUpdated) {
+      if (S.filterOnlyUpdated) {
         list = list.filter(it => it.updatedThisWeek);
       }
 
@@ -3120,13 +2947,13 @@
       });
 
       if (list.length === 0) {
-        showToast("No partnerships to copy in current view");
+        showToast(`No ${S.cfg.entities} to copy in current view`);
         return;
       }
 
       const { html, tsv } = generateTableDataForCopy(list);
-      const tabName = getTabName(currentTab);
-      const scopeDesc = searchQuery ? "Search Results" : (filterOnlyUpdated ? `${tabName} • Updated` : tabName);
+      const tabName = getTabName(S.currentTab);
+      const scopeDesc = searchQuery ? "Search Results" : (S.filterOnlyUpdated ? `${tabName} • Updated` : tabName);
       copyTableData(html, tsv, list.length, scopeDesc);
     };
 
@@ -3137,14 +2964,14 @@
       let scopeDesc = "";
 
       if (scope === "current") {
-        list = allItems.filter(it => it.stage === currentTab);
-        scopeDesc = getTabName(currentTab);
+        list = allItems.filter(it => it.stage === S.currentTab);
+        scopeDesc = getTabName(S.currentTab);
       } else if (scope === "updated") {
         list = allItems.filter(it => it.updatedThisWeek);
         scopeDesc = "Only Updated Deals";
       } else if (scope === "all") {
         list = allItems.slice();
-        scopeDesc = "All Partnerships";
+        scopeDesc = `All ${S.cfg.entities.replace(/^./, c => c.toUpperCase())}`;
       }
 
       // Sort updated first
@@ -3155,7 +2982,7 @@
       });
 
       if (list.length === 0) {
-        showToast(`No partnerships found for "${scopeDesc}"`);
+        showToast(`No ${S.cfg.entities} found for "${scopeDesc}"`);
         return;
       }
 
@@ -3217,15 +3044,16 @@
     };
 
     // Tabs Navigation
-    document.querySelectorAll(".tab-item").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-item").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentTab = btn.getAttribute("data-tab");
-        const scopeTabSpan = document.getElementById("copyScopeTabName");
-        if (scopeTabSpan) scopeTabSpan.textContent = getTabName(currentTab);
-        renderTable();
-      });
+    // Tabs are re-rendered per view, so listen on the container
+    document.getElementById("tabsNav").addEventListener("click", (e) => {
+      const btn = e.target.closest(".tab-item");
+      if (!btn) return;
+      document.querySelectorAll(".tab-item").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      S.currentTab = btn.getAttribute("data-tab");
+      const scopeTabSpan = document.getElementById("copyScopeTabName");
+      if (scopeTabSpan) scopeTabSpan.textContent = getTabName(S.currentTab);
+      renderTable();
     });
 
     // Search
@@ -3254,7 +3082,14 @@
     const btnSaveModal = document.getElementById("btnSaveModal");
 
     btnOpenAddModal.addEventListener("click", () => {
-      document.getElementById("modalTab").value = currentTab;
+      const cfg = S.cfg;
+      document.getElementById("modalTitle").textContent = cfg.addTitle;
+      document.getElementById("modalNameLabel").textContent = cfg.nameLabel;
+      document.getElementById("modalPartner").placeholder = cfg.namePlaceholder;
+      document.getElementById("modalSubGroup").classList.toggle("hidden", !cfg.hasSub);
+      document.getElementById("modalSub").value = "";
+      document.getElementById("modalTab").innerHTML = cfg.tabs.map(t => `<option value="${t.key}">${escapeHtml(t.label)}</option>`).join("");
+      document.getElementById("modalTab").value = S.currentTab;
       document.getElementById("modalPartner").value = "";
       document.getElementById("modalStatus").value = "Active";
       document.getElementById("modalUpdate").value = "";
@@ -3275,25 +3110,28 @@
       const next = document.getElementById("modalNext").value.trim();
 
       if (!partner) {
-        alert("Please enter partner name");
+        alert(`Please enter ${S.cfg.hasSub ? "activity" : "partner"} name`);
         document.getElementById("modalPartner").focus();
         return;
       }
 
       const items = getActiveItems();
-      items.unshift({
-        id: "p-" + Date.now(),
+      const newItem = {
+        id: (S.key === "intel" ? "i-" : "p-") + Date.now(),
         partner: partner,
         stage: stage,
         status: status,
         update: update || "-",
         next: next || "-",
         comments: []
-      });
+      };
+      // Firebase rejects undefined values, so only set `sub` where the view uses it
+      if (S.cfg.hasSub) newItem.sub = document.getElementById("modalSub").value.trim();
+      items.unshift(newItem);
 
       saveWeeks();
-      if (stage !== currentTab) {
-        currentTab = stage;
+      if (stage !== S.currentTab) {
+        S.currentTab = stage;
         document.querySelectorAll(".tab-item").forEach(b => {
           b.classList.toggle("active", b.getAttribute("data-tab") === stage);
         });
@@ -3377,8 +3215,10 @@
     btnDisconnectCloud.addEventListener("click", () => {
       if (confirm("Disconnect from cloud database and use local storage only?")) {
         localStorage.removeItem(FIREBASE_CONFIG_STORAGE_KEY);
-        if (cloudRef) cloudRef.off();
-        cloudRef = null;
+        Object.values(views).forEach(v => {
+          if (v.cloudRef) v.cloudRef.off();
+          v.cloudRef = null;
+        });
         firebaseDb = null;
         updateCloudStatus("local");
         showToast("Switched to Local Mode");
@@ -3387,110 +3227,23 @@
     });
 
     btnExportBackup.addEventListener("click", () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(weeksData, null, 2));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(S.weeksData, null, 2));
       const dlAnchor = document.createElement("a");
       dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `partnerships_backup_${currentWeekKey}.json`);
+      dlAnchor.setAttribute("download", `${S.key}_backup_${S.currentWeekKey}.json`);
       document.body.appendChild(dlAnchor);
       dlAnchor.click();
       dlAnchor.remove();
       showToast("Backup downloaded");
     });
 
-    // Init
-    loadWeeks();
-    initFirebaseSync();
+    // Init: load both views, connect cloud, then show the one in the URL hash
+    loadWeeks(views.weekly);
+    loadWeeks(views.intel);
+    applyViewChrome();
     renderTable();
-
-    // ================================================================
-    //  INTEL VIEW — switchView, persistence, add row, editable cells
-    // ================================================================
-    const INTEL_DATA_KEY = "il_intel_view_data_v1";
-
-    function saveIntelData() {
-      const data = {};
-      document.querySelectorAll(".intel-cell-editable").forEach(cell => {
-        const id = cell.getAttribute("data-intel-id");
-        const field = cell.getAttribute("data-intel-field");
-        if (id && field) {
-          if (!data[id]) data[id] = {};
-          data[id][field] = cell.innerText.trim();
-        }
-      });
-      try { localStorage.setItem(INTEL_DATA_KEY, JSON.stringify(data)); } catch(e) {}
-    }
-
-    function loadIntelData() {
-      try {
-        const raw = localStorage.getItem(INTEL_DATA_KEY);
-        if (!raw) return;
-        const data = JSON.parse(raw);
-        document.querySelectorAll(".intel-cell-editable").forEach(cell => {
-          const id = cell.getAttribute("data-intel-id");
-          const field = cell.getAttribute("data-intel-field");
-          if (id && field && data[id] && data[id][field] !== undefined) {
-            cell.innerText = data[id][field];
-          }
-        });
-      } catch(e) {}
-    }
-
-    window.saveIntelCell = function(cell) {
-      saveIntelData();
-    };
-
-    window.handleIntelKeydown = function(e, cell) {
-      if (e.key === "Escape") {
-        cell.blur();
-      }
-      // Allow Enter for new lines (default behaviour, no special handling needed)
-    };
-
-    window.intelAddRow = function() {
-      const activity = prompt("Activity name (e.g. 'New Workshop'):","");
-      if (!activity) return;
-      const subLabel = prompt("Sub-label (e.g. 'Q4 initiative'):", "") || "";
-      const status = prompt("Status (e.g. 'In Progress', 'On Hold', 'Active'):", "In Progress") || "In Progress";
-
-      const id = "custom-" + Date.now();
-      const tbody = document.getElementById("intelTableBody");
-
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>
-          <span class="intel-activity-label">${escapeHtml(activity)}</span>
-          ${subLabel ? `<span class="intel-activity-sub">${escapeHtml(subLabel)}</span>` : ""}
-        </td>
-        <td><span class="intel-status-badge intel-status-progress">${escapeHtml(status)}</span></td>
-        <td class="intel-cell-editable" contenteditable="true" data-intel-id="${id}" data-intel-field="update" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-        <td class="intel-cell-editable" contenteditable="true" data-intel-id="${id}" data-intel-field="next" onblur="saveIntelCell(this)" onkeydown="handleIntelKeydown(event,this)"></td>
-      `;
-      tbody.appendChild(tr);
-      showToast("Row added — click the Update or Next Steps cell to edit");
-    };
-
-    window.switchView = function(view) {
-      const weeklyView = document.getElementById("weeklyView");
-      const intelView = document.getElementById("intelView");
-      const btnWeekly = document.getElementById("btnViewWeekly");
-      const btnIntel = document.getElementById("btnViewIntel");
-
-      if (view === "intel") {
-        weeklyView.classList.add("hidden");
-        intelView.classList.add("active");
-        btnWeekly.classList.remove("active");
-        btnIntel.classList.add("active");
-        loadIntelData();
-      } else {
-        intelView.classList.remove("active");
-        weeklyView.classList.remove("hidden");
-        btnIntel.classList.remove("active");
-        btnWeekly.classList.add("active");
-      }
-    };
-
-    // Load any saved Intel cell edits on page load
-    loadIntelData();
+    initFirebaseSync();
+    if (location.hash === "#intel") switchView("intel");
 
     // Floating Cell Formatting Toolbar listeners
     const tb = document.getElementById("cellFormatToolbar");
