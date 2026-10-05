@@ -1179,7 +1179,6 @@
       color: #cbd5e1;
     }
     .view-intel .week-tag { background: #1565c0; }
-    .view-flat #tabsNav, .view-flat .col-move, .view-flat #copyCurrentItem { display: none; }
     .field-group.hidden { display: none; }
 
   </style>
@@ -1254,7 +1253,7 @@
             <i class="fa-solid fa-chevron-down"></i>
           </button>
           <div class="copy-menu" id="copyMenu">
-            <div class="copy-menu-item" id="copyCurrentItem" onclick="copyTableWithScope('current')">
+            <div class="copy-menu-item" onclick="copyTableWithScope('current')">
               <i class="fa-regular fa-copy"></i>
               <div>
                 <strong>Copy <span id="copyScopeTabName">Ongoing</span> Deals</strong>
@@ -1349,7 +1348,7 @@
           <label for="modalSub">Sub-label</label>
           <input type="text" id="modalSub" class="field-input" placeholder="e.g. Hard bundling, Q4 initiative" />
         </div>
-        <div class="field-group" id="modalTabGroup">
+        <div class="field-group">
           <label for="modalTab">Tab *</label>
           <select id="modalTab" class="field-select"></select>
         </div>
@@ -1716,16 +1715,18 @@
         addTitle: "Add Partnership", nameLabel: "Partner Name *", namePlaceholder: "e.g. Acer, Pearson",
         searchPlaceholder: "Search partner, update, or next steps (e.g., 'Acer', 'Pearson')...",
         hasSub: false,
-        flat: false,
         defaultWeek: { key: "10-Sep-2026", label: "Week of: 10 September 2026", createdAt: "2026-09-10T00:00:00.000Z" },
         defaultData: () => DEFAULT_DATA
       },
       intel: {
         storageKey: "il_intel_weekly_archive_v2",
         cloudPath: "il_intel_tracker",
-        // One flat list: no tabs / Move To (rows keep an unused `stage`, ignored when flat)
-        flat: true,
-        tabs: [{ key: "all", label: "All Activities" }],
+        tabs: [
+          { key: "live", label: "Live" },
+          { key: "not-live", label: "Not Live" }
+        ],
+        // Rows saved under the old categories (aina / oem / programs / mdf) are sorted by status
+        legacyStage: it => /live|active/i.test(it.status || "") ? "live" : "not-live",
         weekTag: "INTEL WEEKLY", weekIcon: "fa-solid fa-microchip",
         nameCol: "Activity", copyNameCol: "Activity",
         entity: "activity", entities: "activities",
@@ -1933,6 +1934,7 @@
           if (st.key === "weekly" && st.weeksData["17-September-2026"]) {
             delete st.weeksData["17-September-2026"];
           }
+          normalizeStages(st);
           localStorage.setItem(st.cfg.storageKey, JSON.stringify(st.weeksData));
 
           // Default to latest week:
@@ -1966,6 +1968,18 @@
       });
     }
 
+    // Puts any row whose stage is not one of the view's tabs onto a valid tab.
+    function normalizeStages(st) {
+      const cfg = st.cfg;
+      Object.values(st.weeksData).forEach(week => {
+        (week.items || []).forEach(it => {
+          if (!cfg.tabs.some(t => t.key === it.stage)) {
+            it.stage = cfg.legacyStage ? cfg.legacyStage(it) : cfg.tabs[0].key;
+          }
+        });
+      });
+    }
+
     function loadWeeks(st) {
       const cfg = st.cfg;
       const saved = localStorage.getItem(cfg.storageKey);
@@ -1993,6 +2007,7 @@
       } else if (st.key === "weekly") {
         st.weeksData[dw.key].label = dw.label;
       }
+      normalizeStages(st);
       localStorage.setItem(cfg.storageKey, JSON.stringify(st.weeksData));
 
       st.currentWeekKey = getLatestWeekKey(st.weeksData);
@@ -2163,7 +2178,6 @@
     function applyViewChrome() {
       const cfg = S.cfg;
       document.getElementById("trackerView").classList.toggle("view-intel", S.key === "intel");
-      document.getElementById("trackerView").classList.toggle("view-flat", !!cfg.flat);
       document.getElementById("weekTagText").textContent = cfg.weekTag;
       document.getElementById("weekTagIcon").className = cfg.weekIcon;
       document.getElementById("thName").textContent = cfg.nameCol;
@@ -2621,7 +2635,7 @@
 
         if (matchesQuery && q) matchCount++;
 
-        const matchesTab = (q || S.cfg.flat) ? true : (it.stage === S.currentTab);
+        const matchesTab = q ? true : (it.stage === S.currentTab);
         return matchesQuery && matchesTab;
       });
 
@@ -2702,7 +2716,7 @@
               ? `<div class="badge-updated" onclick="toggleUpdated('${it.id}', event)" title="Click to remove update badge"><i class="fa-solid fa-bolt"></i> UPDATED</div>` 
               : `<button class="btn-mark-update" onclick="toggleUpdated('${it.id}', event)" title="Click to highlight as updated this week">+ Mark Updated</button>`
             }
-            ${q && !S.cfg.flat && it.stage !== S.currentTab ? `<div style="font-size: 0.68rem; color: #64748b; font-weight: normal; margin-top: 3px;">[${getTabName(it.stage)}]</div>` : ''}
+            ${q && it.stage !== S.currentTab ? `<div style="font-size: 0.68rem; color: #64748b; font-weight: normal; margin-top: 3px;">[${getTabName(it.stage)}]</div>` : ''}
           </td>
           <td class="col-status">
             <span class="status-badge ${badgeClass} editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="status" onfocus="handleCellFocus(this, '${it.id}', 'status')" onblur="handleCellBlur(this, '${it.id}', 'status')" onkeydown="handleCellKeydown(event, this)" title="Click to edit status">${renderFormattedCellContent(it.status || 'Active', q)}</span>
@@ -2932,7 +2946,7 @@
           (it.next && it.next.toLowerCase().includes(q))
         );
       } else {
-        list = list.filter(it => (S.cfg.flat || it.stage === S.currentTab));
+        list = list.filter(it => it.stage === S.currentTab);
       }
 
       if (S.filterOnlyUpdated) {
@@ -2964,7 +2978,7 @@
       let scopeDesc = "";
 
       if (scope === "current") {
-        list = allItems.filter(it => (S.cfg.flat || it.stage === S.currentTab));
+        list = allItems.filter(it => it.stage === S.currentTab);
         scopeDesc = getTabName(S.currentTab);
       } else if (scope === "updated") {
         list = allItems.filter(it => it.updatedThisWeek);
@@ -3087,7 +3101,6 @@
       document.getElementById("modalNameLabel").textContent = cfg.nameLabel;
       document.getElementById("modalPartner").placeholder = cfg.namePlaceholder;
       document.getElementById("modalSubGroup").classList.toggle("hidden", !cfg.hasSub);
-      document.getElementById("modalTabGroup").classList.toggle("hidden", !!cfg.flat);
       document.getElementById("modalSub").value = "";
       document.getElementById("modalTab").innerHTML = cfg.tabs.map(t => `<option value="${t.key}">${escapeHtml(t.label)}</option>`).join("");
       document.getElementById("modalTab").value = S.currentTab;
