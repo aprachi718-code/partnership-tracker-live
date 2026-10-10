@@ -1181,6 +1181,32 @@
     .view-intel .week-tag { background: #1565c0; }
     .field-group.hidden { display: none; }
 
+    /* Drag-to-reorder rows */
+    td.col-partner { position: relative; padding-left: 1.6rem; }
+    .drag-handle {
+      position: absolute;
+      left: 4px;
+      top: 0.7rem;
+      width: 20px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #cbd5e1;
+      font-size: 0.8rem;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      border-radius: 4px;
+    }
+    tbody tr:hover .drag-handle { color: #64748b; }
+    .drag-handle:hover { background: #e2e8f0; color: #334155; }
+    tr.row-dragging { opacity: 0.45; }
+    tr.drop-before > td { box-shadow: inset 0 3px 0 0 #0284c7; }
+    tr.drop-after > td { box-shadow: inset 0 -3px 0 0 #0284c7; }
+    body.is-row-dragging, body.is-row-dragging * { cursor: grabbing !important; user-select: none; }
+
   </style>
 </head>
 <body>
@@ -2690,6 +2716,8 @@
         }
 
         const tr = document.createElement("tr");
+        tr.dataset.rowId = it.id;
+        tr.dataset.upd = it.updatedThisWeek ? "1" : "0";
         if (it.updatedThisWeek) {
           tr.style.backgroundColor = "#fafefc";
         }
@@ -2710,6 +2738,7 @@
 
         tr.innerHTML = `
           <td class="col-partner">
+            <span class="drag-handle" title="Drag to reorder"><i class="fa-solid fa-grip-vertical"></i></span>
             <div class="editable-cell" contenteditable="true" spellcheck="false" data-id="${it.id}" data-field="partner" onfocus="handleCellFocus(this, '${it.id}', 'partner')" onblur="handleCellBlur(this, '${it.id}', 'partner')" onkeydown="handleCellKeydown(event, this)" title="Click to edit">${renderFormattedCellContent(it.partner, q)}</div>
             ${S.cfg.hasSub ? `<div class="editable-cell cell-sub" contenteditable="true" spellcheck="false" data-placeholder="Add sub-label" data-id="${it.id}" data-field="sub" onfocus="handleCellFocus(this, '${it.id}', 'sub')" onblur="handleCellBlur(this, '${it.id}', 'sub')" onkeydown="handleCellKeydown(event, this)" title="Click to edit sub-label">${renderFormattedCellContent(it.sub, q)}</div>` : ''}
             ${it.updatedThisWeek
@@ -3251,12 +3280,86 @@
       showToast("Backup downloaded");
     });
 
+    // Drag-to-reorder rows (pointer events, so it works with mouse and touch).
+    // Order is the item order inside the week; updated rows always stay above
+    // unchanged ones, so a row can only be dropped among rows of its own group.
+    function moveItemTo(id, targetId, after) {
+      const items = getActiveItems();
+      const from = items.findIndex(x => x.id === id);
+      if (from < 0 || id === targetId) return;
+      const [moved] = items.splice(from, 1);
+      let to = items.findIndex(x => x.id === targetId);
+      if (to < 0) { items.splice(from, 0, moved); return; }
+      items.splice(after ? to + 1 : to, 0, moved);
+      saveWeeks();
+      renderTable();
+      showToast("Order updated");
+    }
+
+    function initRowDrag() {
+      const body = document.getElementById("tableBody");
+      let drag = null;
+
+      const clearMarks = () => body.querySelectorAll(".drop-before, .drop-after").forEach(r => r.classList.remove("drop-before", "drop-after"));
+      const finish = () => {
+        if (!drag) return;
+        drag.tr.classList.remove("row-dragging");
+        document.body.classList.remove("is-row-dragging");
+        clearMarks();
+        drag = null;
+      };
+
+      body.addEventListener("pointerdown", (e) => {
+        const handle = e.target.closest(".drag-handle");
+        if (!handle) return;
+        const tr = handle.closest("tr");
+        if (!tr || !tr.dataset.rowId) return;
+        e.preventDefault();
+        hideToolbar();
+        drag = { id: tr.dataset.rowId, tr, upd: tr.dataset.upd, targetId: null, after: false };
+        tr.classList.add("row-dragging");
+        document.body.classList.add("is-row-dragging");
+        try { handle.setPointerCapture(e.pointerId); } catch (err) {}
+      });
+
+      // Works out which row the pointer is over and whether it would land before or after it
+      const updateTarget = (e) => {
+        clearMarks();
+        drag.targetId = null;
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const row = el ? el.closest("tr[data-row-id]") : null;
+        if (!row || row === drag.tr || row.dataset.upd !== drag.upd) return;
+        const rect = row.getBoundingClientRect();
+        drag.after = e.clientY > rect.top + rect.height / 2;
+        drag.targetId = row.dataset.rowId;
+        row.classList.add(drag.after ? "drop-after" : "drop-before");
+      };
+
+      body.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        // Scroll the page when dragging near the top / bottom edge
+        if (e.clientY < 70) window.scrollBy(0, -14);
+        else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
+        updateTarget(e);
+      });
+
+      document.addEventListener("pointerup", (e) => {
+        if (!drag) return;
+        updateTarget(e);
+        const { id, targetId, after } = drag;
+        finish();
+        if (targetId) moveItemTo(id, targetId, after);
+      });
+      document.addEventListener("pointercancel", finish);
+    }
+
     // Init: load both views, connect cloud, then show the one in the URL hash
     loadWeeks(views.weekly);
     loadWeeks(views.intel);
     applyViewChrome();
     renderTable();
     initFirebaseSync();
+    initRowDrag();
     if (location.hash === "#intel") switchView("intel");
 
     // Floating Cell Formatting Toolbar listeners
